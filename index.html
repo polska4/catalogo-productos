@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="es" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo Premium - Todos los Productos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+    
+    .product-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 188, 212, 0.15);
+    }
+    
+    .filter-btn {
+      transition: all 0.2s ease;
+    }
+    
+    .filter-btn.active {
+      background: #00BCD4;
+      color: white;
+      border-color: #00BCD4;
+    }
+    
+    .nutrition-row:nth-child(even) {
+      background: rgba(0, 188, 212, 0.05);
+    }
+    
+    .search-input:focus {
+      box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.2);
+    }
+    
+    .modal-overlay {
+      animation: fadeIn 0.2s ease;
+    }
+    
+    .modal-content {
+      animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    .category-pill {
+      transition: all 0.2s ease;
+    }
+    
+    .category-pill:hover {
+      background: #00BCD4;
+      color: white;
+    }
+    
+    .category-pill.active {
+      background: #00BCD4;
+      color: white;
+    }
+
+    .allergen-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #fee2e2;
+      color: #991b1b;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .nutrition-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .nutrition-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .nutrition-table td:first-child {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .nutrition-table td:last-child {
+      text-align: right;
+      color: #00BCD4;
+      font-weight: bold;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #00BCD4;
+      border-radius: 3px;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-white text-gray-900 overflow-auto">
+  <div id="app" class="w-full h-full"><!-- Header Section -->
+   <header class="bg-black text-white py-3 px-4 md:px-8">
+    <div class="max-w-7xl mx-auto">
+     <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+       <div class="w-10 h-10 bg-cyan-400 rounded flex items-center justify-center">
+        <svg class="w-6 h-6 text-black" fill="currentColor" viewbox="0 0 24 24"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm0 2v12h16V6H4zm2 2h2v2H6V8zm0 4h2v2H6v-2zm4-4h8v2h-8V8zm0 4h8v2h-8v-2z" />
+        </svg>
+       </div><span class="text-2xl font-bold tracking-wider">CATÁLOGO</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide">
+  
+  <a href="index.html" class="text-cyan-400">
+    PRODUCTOS
+  </a>
+
+  <a href="fichas-tecnicas.html" class="hover:text-cyan-400 transition">
+    FICHAS TÉCNICAS
+  </a>
+
+</nav>
+     </div>
+    </div>
+   </header><!-- Hero Section -->
+   <section 
+  class="text-white py-28 px-4 md:px-8 relative overflow-hidden bg-cover bg-center bg-[center_50%]"
+  style="background-image: url('img/YBB_Linkedin_Sfondi_20264.jpg');">
+    <div class="absolute inset-0 bg-black/50"></div>
+
+  <div class="max-w-7xl mx-auto relative z-10">
+    <h1 id="section-title" class="text-5xl md:text-6xl font-extrabold tracking-tight mb-4">
+      NUESTROS PRODUCTOS
+    </h1>
+     <p class="text-xl text-gray-300 max-w-2xl font-light tracking-wide">Descubre nuestra amplia selección de productos en nuestras máquinas expendedoras. Filtra por alérgenos y encuentra exactamente lo que buscas.</p><!-- Search Bar -->
+     <div class="mt-8 max-w-2xl">
+      <div class="relative"><input type="text" id="search-input" placeholder="Buscar productos, marcas o ingredientes..." class="search-input w-full px-6 py-4 pl-14 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white placeholder-gray-400 text-lg focus:outline-none focus:border-cyan-400 transition">
+       <svg class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+       </svg>
+      </div>
+     </div>
+    </div>
+   </section><!-- Filters Section -->
+   <section class="bg-gray-50 border-b border-gray-200 py-6 px-4 md:px-8 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto"><!-- Categories -->
+     <div class="mb-6">
+      <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Categorías</h3>
+      <div class="flex flex-wrap gap-2" id="category-filters"><button class="category-pill px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition active" data-category="all"> TODOS </button> <button class="category-pill px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-category="snacks"> 🥨 SNACKS </button> <button class="category-pill px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-category="bebidas"> 🥤 BEBIDAS </button> <button class="category-pill px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-category="dulces"> 🍫 DULCES </button> <button class="category-pill px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-category="saludables"> 🥗 SALUDABLES </button> <button class="category-pill px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-category="cafe"> ☕ CAFÉ </button>
+      </div>
+     </div><!-- Allergens Filter -->
+     <div class="mb-6">
+      <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Filtrar por Alérgenos</h3>
+      <div class="flex flex-wrap gap-2" id="allergen-filters"><button class="filter-btn px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition active" data-allergen="none"> ✓ Sin filtro </button> <button class="filter-btn px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-allergen="gluten"> 🌾 Gluten </button> <button class="filter-btn px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-allergen="lactosa"> 🥛 Lactosa </button> <button class="filter-btn px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-allergen="frutos-secos"> 🥜 Frutos Secos </button> <button class="filter-btn px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-allergen="cacahuete"> 🥜 Cacahuete </button> <button class="filter-btn px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-allergen="soja"> 🫘 Soja </button> <button class="filter-btn px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-allergen="huevo"> 🥚 Huevo </button> <button class="filter-btn px-4 py-2 rounded-full border-2 border-gray-300 text-sm font-semibold tracking-wide transition" data-allergen="sulfitos"> ⚠️ Sulfitos </button>
+      </div>
+     </div><!-- Active Filters Display -->
+     <div id="active-filters" class="hidden">
+      <div class="flex items-center gap-2 flex-wrap"><span class="text-xs font-bold text-gray-500">Filtros activos:</span>
+       <div id="active-filters-list" class="flex gap-2 flex-wrap"></div><button id="clear-filters" class="text-xs text-cyan-600 font-bold hover:underline ml-2"> Limpiar todo </button>
+      </div>
+     </div>
+    </div>
+   </section><!-- Products Grid -->
+   <section class="py-12 px-4 md:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+     <div class="flex items-center justify-between mb-8">
+      <p id="results-count" class="text-gray-500 font-medium"></p><select id="sort-select" class="px-4 py-2 border-2 border-gray-200 rounded-lg font-medium text-sm focus:outline-none focus:border-cyan-400"> <option value="name">Ordenar: A-Z</option> <option value="name-desc">Ordenar: Z-A</option> <option value="brand">Por marca</option> </select>
+     </div>
+     <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"><!-- Products will be rendered here -->
+     </div><!-- No Results -->
+     <div id="no-results" class="hidden text-center py-16">
+      <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+       <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+       </svg>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-700 mb-2">No se encontraron productos</h3>
+      <p class="text-gray-500">Intenta ajustar los filtros o la búsqueda</p>
+     </div>
+    </div>
+   </section><!-- Product Modal -->
+   <div id="product-modal" class="modal-overlay fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden overflow-y-auto">
+    <div class="min-h-full flex items-center justify-center p-4">
+     <div class="modal-content bg-white rounded-2xl max-w-3xl w-full max-h-[90%] overflow-y-auto shadow-2xl">
+      <div id="modal-content"><!-- Modal content will be rendered here -->
+      </div>
+     </div>
+    </div>
+   </div><!-- Footer -->
+   <footer class="bg-black text-white py-8 px-4 md:px-8">
+    <div class="max-w-7xl mx-auto text-center">
+     <p class="text-gray-400 text-sm tracking-wide">©IVS Ibérica. Información nutricional orientativa. Para información actualizada comprobar la etiqueta del producto.</p>
+    </div>
+   </footer>
+  </div>
+  <script>
+    const products = [
+      // CAFÉ
+      { id: 1, name: "Café Tupinamba Cimbali", category: "cafe", image: "<img src='img/1.cafe-cimbali.png' class='w-full h-full object-contain' />", brand: "Tupinamba", description: "Café premium cimbali", allergens: [], nutrition: { energia: "2 kcal", proteina: "0.2g", grasas: "0g", carbohidratos: "0.3g", fibra: "0g", sodio: "0mg", cafeina: "95mg" } },
+      { id: 2, name: "Café Tupinamba UTZ", category: "cafe", image: "<img src='img/2. Cafe tupinamba utz.png' class='w-full h-full object-contain' />", brand: "Tupinamba", description: "Café UTZ certificado", allergens: [], nutrition: { energia: "2 kcal", proteina: "0.2g", grasas: "0g", carbohidratos: "0.3g", fibra: "0g", sodio: "0mg", cafeina: "95mg" } },
+      { id: 3, name: "Café Tupinamba TOP QUALITY", category: "cafe", image: "<img src='img/3. Cafe tupinamba top quality.png' class='w-full h-full object-contain' />", brand: "Tupinamba", description: "Café top quality premium", allergens: [], nutrition: { energia: "2 kcal", proteina: "0.2g", grasas: "0g", carbohidratos: "0.3g", fibra: "0g", sodio: "0mg", cafeina: "95mg" } },
+      { id: 4, name: "Café Tupinamba DESCAFEINADO", category: "cafe", image: "<img src='img/4. Cafe tupinamba descafeinado.png' class='w-full h-full object-contain' />", brand: "Tupinamba", description: "Café descafeinado puro", allergens: [], nutrition: { energia: "1 kcal", proteina: "0.1g", grasas: "0g", carbohidratos: "0.2g", fibra: "0g", sodio: "0mg", cafeina: "3mg" } },
+      { id: 5, name: "Café Tupinamba EXTRA MEZCLA", category: "cafe", image: "<img src='img/5. Cafe tupinamba extra mezcla.jpg' class='w-full h-full object-contain' />", brand: "Tupinamba", description: "Café extra mezcla especial", allergens: [], nutrition: { energia: "2 kcal", proteina: "0.2g", grasas: "0g", carbohidratos: "0.3g", fibra: "0g", sodio: "0mg", cafeina: "95mg" } },
+      { id: 6, name: "Bonka SELECCIÓN ESPECIAL", category: "cafe", image: "<img src='img/6. Cafe bonka seleccion especial.png' class='w-full h-full object-contain' />", brand: "Bonka", description: "Selección especial Bonka", allergens: [], nutrition: { energia: "2 kcal", proteina: "0.2g", grasas: "0g", carbohidratos: "0.3g", fibra: "0g", sodio: "0mg", cafeina: "95mg" } },
+      { id: 7, name: "Café Lavazza Expert GUSTO FORTE", category: "cafe", image: "<img src='img/7. Cafe lavazza expert gusto forte.png' class='w-full h-full object-contain' />", brand: "Lavazza", description: "Café gusto forte italiano", allergens: [], nutrition: { energia: "2 kcal", proteina: "0.2g", grasas: "0g", carbohidratos: "0.3g", fibra: "0g", sodio: "0mg", cafeina: "100mg" } },
+      { id: 8, name: "Café Illy INTENSO", category: "cafe", image: "<img src='img/8. Cafe illy intenso.png' class='w-full h-full object-contain' />", brand: "Illy", description: "Espresso intenso puro", allergens: [], nutrition: { energia: "2 kcal", proteina: "0.2g", grasas: "0g", carbohidratos: "0.3g", fibra: "0g", sodio: "0mg", cafeina: "100mg" } },
+      { id: 9, name: "Descafeinado Soluble Vendin", category: "cafe", image: "<img src='img/9. Cafe descafeinado soluble vendin.png' class='w-full h-full object-contain' />", brand: "Vendin", description: "Café descafeinado soluble", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", cafeina: "2mg" } },
+      { id: 224, name: "Café Ginseng Ristora", category: "cafe", image: "<img src='img/18. Cafe ginseng ristora.jpg' class='w-full h-full object-contain' />", brand: "Ristora", description: "Café Ginseng", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", cafeina: "0mg" } },
+      { id: 227, name: "Café Soja Caramelo", category: "cafe", image: "<img src='img/253. Café soja caramelo.jpg' class='w-full h-full object-contain' />", brand: "Alpro", description: "Café Soja Caramelo", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", cafeina: "0mg" } },
+      { id: 228, name: "Café Almendra", category: "cafe", image: "<img src='img/254. Cafe Almendra.jpg' class='w-full h-full object-contain' />", brand: "Alpro", description: "Café Almendra", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", cafeina: "0mg" } },
+
+
+      // CAFÉ - Cappuccino
+      { id: 10, name: "Cappuccino VAINILLA Caprimo", category: "cafe", image: "<img src='img/10. Cafe cappuccino vainilla caprimo.png' class='w-full h-full object-contain' />", brand: "Caprimo", description: "Cappuccino sabor vainilla", allergens: ["lactosa", "gluten"], nutrition: { energia: "430 kcal", proteina: "7.7g", grasas: "11g", carbohidratos: "74g", fibra: "0g", sodio: "80mg", cafeina: "15mg" } },
+      { id: 11, name: "Cappuccino IRISH Caprimo", category: "cafe", image: "<img src='img/11. Cafe cappuccino irish caprimo.jpg' class='w-full h-full object-contain' />", brand: "Caprimo", description: "Cappuccino irish cremoso", allergens: ["lactosa", "gluten"], nutrition: { energia: "440 kcal", proteina: "8.4g", grasas: "12g", carbohidratos: "73g", fibra: "0g", sodio: "85mg", cafeina: "16mg" } },
+      { id: 12, name: "Cappuccino AVELLANA Caprimo", category: "cafe", image: "<img src='img/12. Cafe cappuccino avellana caprimo.jpg' class='w-full h-full object-contain' />", brand: "Caprimo", description: "Cappuccino sabor avellana", allergens: ["lactosa", "gluten", "frutos-secos"], nutrition: { energia: "42 kcal", proteina: "1.1g", grasas: "1.6g", carbohidratos: "6.2g", fibra: "0g", sodio: "82mg", cafeina: "15mg" } },
+      { id: 13, name: "Cappuccino CARAMELO Caprimo", category: "cafe", image: "<img src='img/13. Cafe cappuccino caramelo caprimo.png' class='w-full h-full object-contain' />", brand: "Caprimo", description: "Cappuccino dulce caramelo", allergens: ["lactosa", "gluten"], nutrition: { energia: "48 kcal", proteina: "1.2g", grasas: "1.9g", carbohidratos: "7g", fibra: "0g", sodio: "88mg", cafeina: "16mg" } },
+      { id: 14, name: "Cappuccino VAINILLA Qualery", category: "cafe", image: "<img src='img/14. Cafe cappuccino vainilla qualery.jpg' class='w-full h-full object-contain' />", brand: "Qualery", description: "Cappuccino vainilla premium", allergens: ["lactosa", "gluten"], nutrition: { energia: "40 kcal", proteina: "1g", grasas: "1.5g", carbohidratos: "6g", fibra: "0g", sodio: "80mg", cafeina: "15mg" } },
+      { id: 15, name: "Cappuccino CARAMELO Qualery", category: "cafe", image: "<img src='img/15. Cafe cappuccino caramelo qualery.jpg' class='w-full h-full object-contain' />", brand: "Qualery", description: "Cappuccino caramelo delicioso", allergens: ["lactosa", "gluten"], nutrition: { energia: "48 kcal", proteina: "1.2g", grasas: "1.9g", carbohidratos: "7g", fibra: "0g", sodio: "88mg", cafeina: "16mg" } },
+      { id: 16, name: "Cappuccino AVELLANA Qualery", category: "cafe", image: "<img src='img/16. Cafe cappuccino avellana qualery.jpg' class='w-full h-full object-contain' />", brand: "Qualery", description: "Cappuccino avellana suave", allergens: ["lactosa", "gluten", "frutos-secos"], nutrition: { energia: "42 kcal", proteina: "1.1g", grasas: "1.6g", carbohidratos: "6.2g", fibra: "0g", sodio: "82mg", cafeina: "15mg" } },
+      { id: 17, name: "Cappuccino IRISH Qualery", category: "cafe", image: "<img src='img/17. Cafe cappuccino irish qualery.jpg' class='w-full h-full object-contain' />", brand: "Qualery", description: "Cappuccino irish tostado", allergens: ["lactosa", "gluten"], nutrition: { energia: "45 kcal", proteina: "1.2g", grasas: "1.8g", carbohidratos: "6.5g", fibra: "0g", sodio: "85mg", cafeina: "16mg" } },
+
+      // BEBIDAS - San Benedetto
+      { id: 18, name: "Zumo Enjoy Fresa San Benedetto", category: "bebidas", image: "<img src='img/163. Enjoy fresa.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Zumo fresa natural", allergens: [], nutrition: { energia: "48 kcal", proteina: "0.5g", grasas: "0g", carbohidratos: "12g", fibra: "0g", sodio: "10mg", azucares: "11g" } },
+      { id: 250, name: "Zumo Enjoy Tropical San Benedetto", category: "bebidas", image: "<img src='img/159. Enjoy tropical san benedetto.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Zumo tropical natural", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g" } },
+      { id: 249, name: "Zumo Enjoy Naranja San Benedetto", category: "bebidas", image: "<img src='img/160. Enjoy naranja san benedetto.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Zumo naranja natural", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g" } },
+      { id: 251, name: "Zero Frutos Rojos San Benedetto", category: "bebidas", image: "<img src='img/161. Zero frutos rojos san benedetto.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Zumo tropical natural", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g" } },
+      { id: 252, name: "Zumo Zero Ace", category: "bebidas", image: "<img src='img/162. Zumo zero ace.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Zumo tropical natural", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g" } },
+      { id: 19, name: "Zumo Zero Fruta Mix San Benedetto", category: "bebidas", image: "<img src='img/164. Zumo zero fruta mix.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Zumo mix sin azúcar", allergens: [], nutrition: { energia: "5 kcal", proteina: "0g", grasas: "0g", carbohidratos: "1g", fibra: "0g", sodio: "8mg", azucares: "0g" } },
+      { id: 20, name: "Té Limón San Benedetto", category: "bebidas", image: "<img src='img/165. The limon san benedetto.jpg' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Té helado limón", allergens: [], nutrition: { energia: "18 kcal", proteina: "0.2g", grasas: "0g", carbohidratos: "4.5g", fibra: "0g", sodio: "5mg", cafeina: "8mg" } },
+      { id: 21, name: "Té Verde San Benedetto", category: "bebidas", image: "<img src='img/166. The verde san benedetto.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Té verde fresco", allergens: [], nutrition: { energia: "15 kcal", proteina: "0.1g", grasas: "0g", carbohidratos: "3.5g", fibra: "0g", sodio: "3mg", cafeina: "12mg" } },
+      { id: 22, name: "Té Melocotón San Benedetto", category: "bebidas", image: "<img src='img/167. The melocoton san benedetto.jpg' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Té melocotón premium", allergens: [], nutrition: { energia: "20 kcal", proteina: "0.2g", grasas: "0g", carbohidratos: "5g", fibra: "0g", sodio: "6mg", cafeina: "10mg" } },
+      { id: 23, name: "Upgrade Blue San Benedetto", category: "bebidas", image: "<img src='img/168. Upgrade blue.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Bebida upgrade blue", allergens: [], nutrition: { energia: "35 kcal", proteina: "0.3g", grasas: "0g", carbohidratos: "8.5g", fibra: "0g", sodio: "15mg", azucares: "8g" } },
+      { id: 24, name: "Upgrade Red Zero San Benedetto", category: "bebidas", image: "<img src='img/169. Upgrade red zero.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Bebida red sin azúcar", allergens: [], nutrition: { energia: "8 kcal", proteina: "0g", grasas: "0g", carbohidratos: "2g", fibra: "0g", sodio: "12mg", azucares: "0g" } },
+      { id: 25, name: "Upgrade Blue Zero San Benedetto", category: "bebidas", image: "<img src='img/170. Upgrade blue zero.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Bebida blue sin azúcar", allergens: [], nutrition: { energia: "8 kcal", proteina: "0g", grasas: "0g", carbohidratos: "2g", fibra: "0g", sodio: "12mg", azucares: "0g" } },
+      { id: 268, name: "Gazpacho", category: "bebidas", image: "<img src='img/255. Gazpacho.jpg' class='w-full h-full object-contain' />", brand: "Alvalle", description: "Gazpacho Alvalle 20cl", allergens: [], nutrition: { energia: "8 kcal", proteina: "0g", grasas: "0g", carbohidratos: "2g", fibra: "0g", sodio: "12mg", azucares: "0g" } },
+      { id: 269, name: "Zumo de naranja natural", category: "bebidas", image: "<img src='img/256. Zumo naranja natural.jpg' class='w-full h-full object-contain' />", brand: "Essencial", description: "Zumo naranja natural essencial pet 200ml", allergens: [], nutrition: { energia: "8 kcal", proteina: "0g", grasas: "0g", carbohidratos: "2g", fibra: "0g", sodio: "12mg", azucares: "0g" } },
+      { id: 270, name: "Cacaolat Stevia", category: "bebidas", image: "<img src='img/257. Cacaolat stevia.jpg' class='w-full h-full object-contain' />", brand: "Cacaolat", description: "Cacaolat Stevia", allergens: [], nutrition: { energia: "8 kcal", proteina: "0g", grasas: "0g", carbohidratos: "2g", fibra: "0g", sodio: "12mg", azucares: "0g" } },
+
+      // BEBIDAS - Juver
+      { id: 26, name: "Zumo Piña Juver", category: "bebidas", image: "<img src='img/171. Zumo piña juver.png' class='w-full h-full object-contain' />", brand: "Juver", description: "Zumo piña tropical", allergens: [], nutrition: { energia: "52 kcal", proteina: "0.6g", grasas: "0g", carbohidratos: "13g", fibra: "0g", sodio: "12mg", azucares: "12g" } },
+      { id: 27, name: "Zumo Naranja Juver", category: "bebidas", image: "<img src='img/172. Zumo naranja juver.jpg' class='w-full h-full object-contain' />", brand: "Juver", description: "Zumo naranja exprimido", allergens: [], nutrition: { energia: "48 kcal", proteina: "0.7g", grasas: "0.2g", carbohidratos: "11g", fibra: "0.2g", sodio: "8mg", azucares: "10g" } },
+      { id: 28, name: "Zumo Melocotón Juver", category: "bebidas", image: "<img src='img/173. Zumo melocoton juver.jpg' class='w-full h-full object-contain' />", brand: "Juver", description: "Zumo melocotón suave", allergens: [], nutrition: { energia: "50 kcal", proteina: "0.5g", grasas: "0g", carbohidratos: "12.5g", fibra: "0g", sodio: "10mg", azucares: "11.5g" } },
+
+      // BEBIDAS - Granini
+      { id: 29, name: "Zumo Melocotón Granini", category: "bebidas", image: "<img src='img/174. Zumo melocoton granini.png' class='w-full h-full object-contain' />", brand: "Granini", description: "Zumo melocotón premium", allergens: [], nutrition: { energia: "50 kcal", proteina: "0.5g", grasas: "0g", carbohidratos: "12.5g", fibra: "0g", sodio: "10mg", azucares: "11.5g" } },
+      { id: 30, name: "Zumo Piña Granini", category: "bebidas", image: "<img src='img/175. Zumo piña granini.png' class='w-full h-full object-contain' />", brand: "Granini", description: "Zumo piña puro", allergens: [], nutrition: { energia: "52 kcal", proteina: "0.6g", grasas: "0g", carbohidratos: "13g", fibra: "0g", sodio: "12mg", azucares: "12g" } },
+      { id: 31, name: "Zumo Naranja Granini", category: "bebidas", image: "<img src='img/176. Zumo naranja granini.png' class='w-full h-full object-contain' />", brand: "Granini", description: "Zumo naranja concentrado", allergens: [], nutrition: { energia: "48 kcal", proteina: "0.7g", grasas: "0.2g", carbohidratos: "11g", fibra: "0.2g", sodio: "8mg", azucares: "10g" } },
+      { id: 32, name: "Zumo Zanahoria y Naranja Granini", category: "bebidas", image: "<img src='img/177. Zumo zanahoria naranja granini.png' class='w-full h-full object-contain' />", brand: "Granini", description: "Zumo zanahoria naranja", allergens: [], nutrition: { energia: "45 kcal", proteina: "0.6g", grasas: "0.1g", carbohidratos: "10.5g", fibra: "0.3g", sodio: "9mg", azucares: "9g" } },
+
+      // BEBIDAS - Otras
+      { id: 225, name: "The al limón Ristora", category: "bebidas", image: "<img src='img/19. The al limon ristora.jpg' class='w-full h-full object-contain' />", brand: "ristora", description: "The al limon", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", cafeina: "0mg" } },
+      { id: 33, name: "Agua con Gas Vichy Catalan", category: "bebidas", image: "<img src='img/178. Vichy catalan.jpg' class='w-full h-full object-contain' />", brand: "Vichy Catalan", description: "Agua mineral con gas", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "900mg", calcio: "48mg" } },
+      { id: 34, name: "Red Bull", category: "bebidas", image: "<img src='img/179. Red bull.jpg' class='w-full h-full object-contain' />", brand: "Red Bull", description: "Bebida energética", allergens: ["gluten"], nutrition: { energia: "110 kcal", proteina: "1.2g", grasas: "0g", carbohidratos: "27g", fibra: "0g", sodio: "200mg", azucares: "27g", cafeina: "80mg" } },
+      { id: 35, name: "Red Bull Zero", category: "bebidas", image: "<img src='img/180. Red bull zero.jpg' class='w-full h-full object-contain' />", brand: "Red Bull", description: "Red Bull sin azúcar", allergens: ["gluten"], nutrition: { energia: "8 kcal", proteina: "1g", grasas: "0g", carbohidratos: "2g", fibra: "0g", sodio: "190mg", azucares: "0g", cafeina: "80mg" } },
+      { id: 36, name: "Monster", category: "bebidas", image: "<img src='img/181. Monster.png' class='w-full h-full object-contain' />", brand: "Monster", description: "Bebida energética monster", allergens: ["gluten"], nutrition: { energia: "120 kcal", proteina: "0g", grasas: "0g", carbohidratos: "30g", fibra: "0g", sodio: "210mg", azucares: "30g", cafeina: "86mg" } },
+      { id: 37, name: "Monster Absolutely Zero", category: "bebidas", image: "<img src='img/182. Monster absolutely.jpg' class='w-full h-full object-contain' />", brand: "Monster", description: "Monster sin azúcar", allergens: ["gluten"], nutrition: { energia: "10 kcal", proteina: "0g", grasas: "0g", carbohidratos: "2g", fibra: "0g", sodio: "200mg", azucares: "0g", cafeina: "85mg" } },
+      { id: 37, name: "Monster Ultrawhite", category: "bebidas", image: "<img src='img/258. Monster ultrawhite.png' class='w-full h-full object-contain' />", brand: "Monster", description: "Monster ultrawhite 500ml", allergens: ["gluten"], nutrition: { energia: "10 kcal", proteina: "0g", grasas: "0g", carbohidratos: "2g", fibra: "0g", sodio: "200mg", azucares: "0g", cafeina: "85mg" } },
+      { id: 38, name: "Coca-Cola Lata", category: "bebidas", image: "<img src='img/183. Coca cola lata.jpg' class='w-full h-full object-contain' />", brand: "Coca-Cola", description: "Coca-cola clásica lata", allergens: [], nutrition: { energia: "42 kcal", proteina: "0g", grasas: "0g", carbohidratos: "10.6g", fibra: "0g", sodio: "0mg", azucares: "10.6g", cafeina: "34mg" } },
+      { id: 39, name: "Coca-Cola Lata sin Cafeína", category: "bebidas", image: "<img src='img/184. Coca cola sin cafeina.png' class='w-full h-full object-contain' />", brand: "Coca-Cola", description: "Coca-cola sin cafeína", allergens: [], nutrition: { energia: "140 kcal", proteina: "0g", grasas: "0g", carbohidratos: "35g", fibra: "0g", sodio: "45mg", azucares: "35g", cafeina: "0mg" } },
+      { id: 40, name: "Coca-Cola Lata Light", category: "bebidas", image: "<img src='img/185. Coca cola light.png' class='w-full h-full object-contain' />", brand: "Coca-Cola", description: "Coca-cola light lata", allergens: [], nutrition: { energia: "0.2 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g", cafeina: "34mg" } },
+      { id: 41, name: "Coca-Cola Zero Lata", category: "bebidas", image: "<img src='img/186. Coca cola zero.png' class='w-full h-full object-contain' />", brand: "Coca-Cola", description: "Coca-cola zero lata", allergens: [], nutrition: { energia: "0.2 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "50mg", azucares: "0g", cafeina: "34mg" } },
+      { id: 42, name: "Coca-Cola Zero Zero Lata", category: "bebidas", image: "<img src='img/187. Coca cola zero zero.png' class='w-full h-full object-contain' />", brand: "Coca-Cola", description: "Coca-cola zero zero", allergens: [], nutrition: { energia: "0.2 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "50mg", azucares: "0g", cafeina: "34mg" } },
+      { id: 43, name: "Fanta Naranja Lata", category: "bebidas", image: "<img src='img/188. Fanta naranja.png' class='w-full h-full object-contain' />", brand: "Fanta", description: "Fanta naranja lata", allergens: [], nutrition: { energia: "135 kcal", proteina: "0g", grasas: "0g", carbohidratos: "34g", fibra: "0g", sodio: "50mg", azucares: "34g" } },
+      { id: 44, name: "Fanta Naranja Zero Lata", category: "bebidas", image: "<img src='img/189. Fanta naranja zero.png' class='w-full h-full object-contain' />", brand: "Fanta", description: "Fanta naranja sin azúcar", allergens: [], nutrition: { energia: "5 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "45mg", azucares: "0g" } },
+      { id: 45, name: "Fanta Limón Lata", category: "bebidas", image: "<img src='img/190. Fanta limon.png' class='w-full h-full object-contain' />", brand: "Fanta", description: "Fanta limón lata", allergens: [], nutrition: { energia: "135 kcal", proteina: "0g", grasas: "0g", carbohidratos: "34g", fibra: "0g", sodio: "50mg", azucares: "34g" } },
+      { id: 46, name: "Fanta Limón Zero Lata", category: "bebidas", image: "<img src='img/191. Fanta limon zero.png' class='w-full h-full object-contain' />", brand: "Fanta", description: "Fanta limón sin azúcar", allergens: [], nutrition: { energia: "5 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "45mg", azucares: "0g" } },
+      { id: 47, name: "Nestea Limón Lata", category: "bebidas", image: "<img src='img/192. Nestea limon.png' class='w-full h-full object-contain' />", brand: "Nestea", description: "Nestea limón lata", allergens: [], nutrition: { energia: "35 kcal", proteina: "0g", grasas: "0g", carbohidratos: "8.5g", fibra: "0g", sodio: "30mg", azucares: "8g", cafeina: "5mg" } },
+      { id: 48, name: "Nestea Limón sin Azúcar Lata", category: "bebidas", image: "<img src='img/193. nestea limon sin azucar.png' class='w-full h-full object-contain' />", brand: "Nestea", description: "Nestea sin azúcar", allergens: [], nutrition: { energia: "8 kcal", proteina: "0g", grasas: "0g", carbohidratos: "2g", fibra: "0g", sodio: "25mg", azucares: "0g", cafeina: "5mg" } },
+      { id: 49, name: "Aquarius Limón Lata", category: "bebidas", image: "<img src='img/194. Aquarius limon.png' class='w-full h-full object-contain' />", brand: "Aquarius", description: "Aquarius limón lata", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 50, name: "Aquarius Limón Zero Lata", category: "bebidas", image: "<img src='img/195. Aquarius limon zero.png' class='w-full h-full object-contain' />", brand: "Aquarius", description: "Aquarius limón sin azúcar", allergens: [], nutrition: { energia: "6 kcal", proteina: "0g", grasas: "0g", carbohidratos: "1.5g", fibra: "0g", sodio: "190mg", azucares: "0g" } },
+      { id: 51, name: "Aquarius Naranja Lata", category: "bebidas", image: "<img src='img/196. Aquarius naranja.png' class='w-full h-full object-contain' />", brand: "Aquarius", description: "Aquarius naranja lata", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 52, name: "Zumo Manzana Appletiser", category: "bebidas", image: "<img src='img/197. Appletiser.png' class='w-full h-full object-contain' />", brand: "Appletiser", description: "Zumo manzana 100%", allergens: [], nutrition: { energia: "46 kcal", proteina: "0g", grasas: "0g", carbohidratos: "10.8g", fibra: "0g", sodio: "3mg", azucares: "10.2g" } },
+      { id: 53, name: "Coca-Cola PET", category: "bebidas", image: "<img src='img/198. Coca cola pet classic.png' class='w-full h-full object-contain' />", brand: "Coca-Cola", description: "Coca-cola botella PET", allergens: [], nutrition: { energia: "42 kcal", proteina: "0g", grasas: "0g", carbohidratos: "10.6g", fibra: "0g", sodio: "45mg", azucares: "10.6g", cafeina: "34mg" } },
+      { id: 54, name: "Coca-Cola PET Light", category: "bebidas", image: "<img src='img/199. Coca cola pet light.png' class='w-full h-full object-contain' />", brand: "Coca-Cola", description: "Coca-cola light PET", allergens: [], nutrition: { energia: "0.2 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g", cafeina: "34mg" } },
+      { id: 55, name: "Coca-Cola PET Zero", category: "bebidas", image: "<img src='img/200. Coca cola pet zero.jpeg' class='w-full h-full object-contain' />", brand: "Coca-Cola", description: "Coca-cola zero PET", allergens: [], nutrition: { energia: "0.2 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "50mg", azucares: "0g", cafeina: "34mg" } },
+      { id: 56, name: "Coca-Cola PET Zero Zero", category: "bebidas", image: "<img src='img/201. Coca cola pet zero zero.png' class='w-full h-full object-contain' />", brand: "Coca-Cola", description: "Coca-cola zero zero PET", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "50mg", azucares: "0g", cafeina: "34mg" } },
+      { id: 57, name: "Fanta PET Naranja", category: "bebidas", image: "<img src='img/202. Fanta pet naranja.png' class='w-full h-full object-contain' />", brand: "Fanta", description: "Fanta naranja botella", allergens: [], nutrition: { energia: "135 kcal", proteina: "0g", grasas: "0g", carbohidratos: "34g", fibra: "0g", sodio: "50mg", azucares: "34g" } },
+      { id: 58, name: "Aquarius PET", category: "bebidas", image: "<img src='img/203. Aquarius pet.png' class='w-full h-full object-contain' />", brand: "Aquarius", description: "Aquarius botella PET", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 59, name: "Aquarius PET Naranja", category: "bebidas", image: "<img src='img/204. Aquarius pet naranja.png' class='w-full h-full object-contain' />", brand: "Aquarius", description: "Aquarius naranja botella", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 60, name: "Powerade Ice Storm", category: "bebidas", image: "<img src='img/205. Powerade ice storm.png' class='w-full h-full object-contain' />", brand: "Powerade", description: "Powerade hielo", allergens: [], nutrition: { energia: "35 kcal", proteina: "0g", grasas: "0g", carbohidratos: "8.5g", fibra: "0g", sodio: "160mg", azucares: "8g" } },
+      { id: 61, name: "Cerveza Estrella Damm", category: "bebidas", image: "<img src='img/206. Cerveza estrella damm.png' class='w-full h-full object-contain' />", brand: "Estrella Damm", description: "Cerveza estrella damm lata 33cl", allergens: ["gluten", "sulfitos"], nutrition: { energia: "150 kcal", proteina: "1.3g", grasas: "0g", carbohidratos: "3g", fibra: "0g", sodio: "20mg", alcohol: "4.6%" } },
+      { id: 62, name: "Cerveza Free Damm", category: "bebidas", image: "<img src='img/207. Cerveza free damm.png' class='w-full h-full object-contain' />", brand: "Free Damm", description: "Cerveza sin alcohol", allergens: ["gluten", "sulfitos"], nutrition: { energia: "20 kcal", proteina: "0.4g", grasas: "0g", carbohidratos: "2g", fibra: "0g", sodio: "15mg", alcohol: "0%" } },
+      { id: 63, name: "Cerveza Mahou Clásica", category: "bebidas", image: "<img src='img/208. Cerveza mahou clasica.png' class='w-full h-full object-contain' />", brand: "Mahou", description: "Cerveza mahou clásica", allergens: ["gluten", "sulfitos"], nutrition: { energia: "150 kcal", proteina: "1.3g", grasas: "0g", carbohidratos: "3g", fibra: "0g", sodio: "20mg", alcohol: "4.8%" } },
+      { id: 64, name: "Cerveza Mahou sin Alcohol", category: "bebidas", image: "<img src='img/209. Cerveza mahou sin alcohol.png' class='w-full h-full object-contain' />", brand: "Mahou", description: "Cerveza sin alcohol", allergens: ["gluten", "sulfitos"], nutrition: { energia: "15 kcal", proteina: "0.3g", grasas: "0g", carbohidratos: "1.5g", fibra: "0g", sodio: "12mg", alcohol: "0%" } },
+      { id: 65, name: "Bifrutas Tropical Pascual", category: "bebidas", image: "<img src='img/210. Bifrutas tropical original.png' class='w-full h-full object-contain' />", brand: "Pascual", description: "Bifrutas tropical", allergens: ["lactosa"], nutrition: { energia: "55 kcal", proteina: "0.8g", grasas: "0.2g", carbohidratos: "13g", fibra: "0g", sodio: "15mg", azucares: "12g" } },
+      { id: 66, name: "Bifrutas Mediterráneo Pascual", category: "bebidas", image: "<img src='img/211. Bifrutas mediterraneo.png' class='w-full h-full object-contain' />", brand: "Pascual", description: "Bifrutas mediterráneo", allergens: ["lactosa"], nutrition: { energia: "52 kcal", proteina: "0.7g", grasas: "0.2g", carbohidratos: "12.5g", fibra: "0g", sodio: "14mg", azucares: "11.5g" } },
+      { id: 67, name: "Caffe Latte Mocay Batido Pascual", category: "bebidas", image: "<img src='img/212. Caffe latte mocay.png' class='w-full h-full object-contain' />", brand: "Pascual", description: "Batido café latte", allergens: ["lactosa"], nutrition: { energia: "125 kcal", proteina: "2.5g", grasas: "3.5g", carbohidratos: "20g", fibra: "0g", sodio: "80mg", cafeina: "25mg", azucares: "18g" } },
+      { id: 68, name: "Cappuccino Mocay Batido Pascual", category: "bebidas", image: "<img src='img/213. Cappuccino mocay batido.png' class='w-full h-full object-contain' />", brand: "Pascual", description: "Batido cappuccino", allergens: ["lactosa"], nutrition: { energia: "130 kcal", proteina: "2.6g", grasas: "3.8g", carbohidratos: "21g", fibra: "0g", sodio: "85mg", cafeina: "26mg", azucares: "19g" } },
+      { id: 69, name: "Cacaolat Batido", category: "bebidas", image: "<img src='img/214. Cacaolat batido.png' class='w-full h-full object-contain' />", brand: "Cacaolat", description: "Batido chocolate", allergens: ["lactosa"], nutrition: { energia: "78 kcal", proteina: "2.7g", grasas: "1.5g", carbohidratos: "13.52g", fibra: "0.3g", sodio: "0.1mg", azucares: "20g" } },
+      { id: 70, name: "Cacaolat Zero", category: "bebidas", image: "<img src='img/215. Cacaolat zero.png' class='w-full h-full object-contain' />", brand: "Cacaolat", description: "Cacaolat sin azúcar", allergens: ["lactosa"], nutrition: { energia: "40 kcal", proteina: "2.7g", grasas: "0.5g", carbohidratos: "4.3g", fibra: "0.5g", sodio: "85mg", azucares: "0g" } },
+      { id: 71, name: "Juice Taronja OK!", category: "bebidas", image: "<img src='img/217. Juice taronja.png' class='w-full h-full object-contain' />", brand: "OK!", description: "Zumo naranja ok", allergens: [], nutrition: { energia: "48 kcal", proteina: "0.7g", grasas: "0.2g", carbohidratos: "11g", fibra: "0.2g", sodio: "8mg", azucares: "10g" } },
+      { id: 72, name: "Juice Maduixa OK!", category: "bebidas", image: "<img src='img/218. Juice maduixa.png' class='w-full h-full object-contain' />", brand: "OK!", description: "Zumo fresa ok", allergens: [], nutrition: { energia: "50 kcal", proteina: "0.5g", grasas: "0g", carbohidratos: "12g", fibra: "0g", sodio: "10mg", azucares: "11g" } },
+      { id: 73, name: "Juice Kiwi OK!", category: "bebidas", image: "<img src='img/219. Juice kiwi.png' class='w-full h-full object-contain' />", brand: "OK!", description: "Zumo kiwi ok", allergens: [], nutrition: { energia: "45 kcal", proteina: "0.6g", grasas: "0.1g", carbohidratos: "10.5g", fibra: "0.3g", sodio: "9mg", azucares: "9.5g" } },
+      { id: 74, name: "Contact Energy Drink", category: "bebidas", image: "<img src='img/220. Contact bebida energetica.png' class='w-full h-full object-contain' />", brand: "Contact", description: "Bebida energética contact", allergens: ["gluten"], nutrition: { energia: "115 kcal", proteina: "0g", grasas: "0g", carbohidratos: "28g", fibra: "0g", sodio: "200mg", azucares: "28g", cafeina: "80mg" } },
+      { id: 75, name: "Agua Bezoya", category: "bebidas", image: "<img src='img/221. Agua bezoya.png' class='w-full h-full object-contain' />", brand: "Bezoya", description: "Agua mineral bezoya", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "10mg", calcio: "75mg" } },
+      { id: 76, name: "Agua Bezoya Brick", category: "bebidas", image: "<img src='img/222. Agua bezoya brick.png' class='w-full h-full object-contain' />", brand: "Bezoya", description: "Agua bezoya brick", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "10mg", calcio: "75mg" } },
+      { id: 77, name: "Agua Auara", category: "bebidas", image: "<img src='img/223. Agua auara.png' class='w-full h-full object-contain' />", brand: "Auara", description: "Agua mineral auara", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "1.12mg", calcio: "44.9mg" } },
+      { id: 78, name: "Agua Font Natura", category: "bebidas", image: "<img src='img/224. Agua font natura.png' class='w-full h-full object-contain' />", brand: "Font Natura", description: "Agua font natura", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "12mg", calcio: "70mg" } },
+      { id: 79, name: "Agua Primavera San Benedetto", category: "bebidas", image: "<img src='img/225. Agua primavera.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Agua mineral primavera", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "6mg", calcio: "85mg" } },
+      { id: 80, name: "Agua Fuente Primavera con Gas San Benedetto", category: "bebidas", image: "<img src='img/226. Fuente primavera con gas.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Agua con gas primavera", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "600mg", calcio: "85mg" } },
+      { id: 81, name: "Agua Mineral San Benedetto", category: "bebidas", image: "<img src='img/227. Agua mineral san benedetto.png' class='w-full h-full object-contain' />", brand: "San Benedetto", description: "Agua mineral pura", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "8mg", calcio: "82mg" } },
+      { id: 82, name: "Agua Aquarel", category: "bebidas", image: "<img src='img/228. Agua aquarel.png' class='w-full h-full object-contain' />", brand: "Aquarel", description: "Agua mineral aquarel", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "5mg", calcio: "88mg" } },
+      { id: 83, name: "Agua Aquabona", category: "bebidas", image: "<img src='img/229. Agua aquabona.png' class='w-full h-full object-contain' />", brand: "Aquabona", description: "Agua aquabona", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "7mg", calcio: "79mg" } },
+      { id: 84, name: "Agua Aquabona con Gas", category: "bebidas", image: "<img src='img/230. Agua aquabona con gas.png' class='w-full h-full object-contain' />", brand: "Aquabona", description: "Agua aquabona con gas", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "580mg", calcio: "79mg" } },
+      { id: 85, name: "Agua Veri", category: "bebidas", image: "<img src='img/231. Agua veri.png' class='w-full h-full object-contain' />", brand: "Veri", description: "Agua mineral veri", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "9mg", calcio: "76mg" } },
+      { id: 86, name: "Agua Viladrau", category: "bebidas", image: "<img src='img/232. Agua viladrau.png' class='w-full h-full object-contain' />", brand: "Viladrau", description: "Agua mineral viladrau", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "11mg", calcio: "81mg" } },
+      { id: 250, name: "Agua San Pellegrino con gas", category: "bebidas", image: "<img src='img/248. Agua san pellegrino con gas.png' class='w-full h-full object-contain' />", brand: "San Pellegrino", description: "Agua San Pellegrino con gas", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "11mg", calcio: "81mg" } },
+      { id: 254, name: "Agua Font Vella", category: "bebidas", image: "<img src='img/251. Agua Font Vella.jpg' class='w-full h-full object-contain' />", brand: "Font Vella", description: "Agua Font Vella", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "11mg", calcio: "81mg" } },
+      { id: 255, name: "Pepsi Max Zero", category: "bebidas", image: "<img src='img/252. Pepsi max zero.jpg' class='w-full h-full object-contain' />", brand: "Pepsi", description: "Pepsi max zero azúcares", allergens: [], nutrition: { energia: "42 kcal", proteina: "0g", grasas: "0g", carbohidratos: "10.6g", fibra: "0g", sodio: "0mg", azucares: "10.6g", cafeina: "34mg" } },
+      { id: 270, name: "Schweppes limon", category: "bebidas", image: "<img src='img/259. Schweppes limon.jpg' class='w-full h-full object-contain' />", brand: "Schweppes", description: "Schweppes limon lata 33cl", allergens: [], nutrition: { energia: "42 kcal", proteina: "0g", grasas: "0g", carbohidratos: "10.6g", fibra: "0g", sodio: "0mg", azucares: "10.6g", cafeina: "34mg" } },
+      { id: 270, name: "Schweppes naranja", category: "bebidas", image: "<img src='img/260. Schweppes naranja.jpg' class='w-full h-full object-contain' />", brand: "Schweppes", description: "Schweppes naranja lata 33cl", allergens: [], nutrition: { energia: "42 kcal", proteina: "0g", grasas: "0g", carbohidratos: "10.6g", fibra: "0g", sodio: "0mg", azucares: "10.6g", cafeina: "34mg" } },
+      { id: 277, name: "Trina naranja lata", category: "bebidas", image: "<img src='img/266. Trina naranja.jpg' class='w-full h-full object-contain' />", brand: "Trina", description: "Trina naranja lata 33cl", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 320, name: "Refresco cola bio", category: "bebidas", image: "<img src='img/308. Refresco cola.jpg' class='w-full h-full object-contain' />", brand: "Hollinger", description: "Refresco cola bio 250ml hollinger", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 321, name: "Levite limón Font Vella", category: "bebidas", image: "<img src='img/309. Levite limon.jpg' class='w-full h-full object-contain' />", brand: "Font Vella", description: "Levite limon font vella pet 0,5l", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 322, name: "Zumo manzana bio", category: "bebidas", image: "<img src='img/310. Zumo manzana.jpg' class='w-full h-full object-contain' />", brand: "Hollinger", description: "Zumo brick manzana bio 200ml hollinger", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 323, name: "Zumo uva negra bio", category: "bebidas", image: "<img src='img/311. Zumo uva negra.jpg' class='w-full h-full object-contain' />", brand: "Hollinger", description: "Zumo brick uva negra bio 200ml hollinger", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 324, name: "Zumo pera bio", category: "bebidas", image: "<img src='img/312. Zumo pera.jpg' class='w-full h-full object-contain' />", brand: "Hollinger", description: "Zumo brick pera bio 200ml hollinger", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 325, name: "Bebida de avena bio", category: "bebidas", image: "<img src='img/313. Bebida avena.jpg' class='w-full h-full object-contain' />", brand: "Natur green", description: "Bebida de avena bio 200ml natur green", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 326, name: "Bebida chocolate con leche eco", category: "bebidas", image: "<img src='img/314. Bebida chocolate con leche.jpg' class='w-full h-full object-contain' />", brand: "Grandeur nature", description: "Bebida chocolate con leche eco 200ml grandeur nature", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 327, name: "Bebida de almendra bio", category: "bebidas", image: "<img src='img/315. Bebida almendra.jpg' class='w-full h-full object-contain' />", brand: "Eco mil", description: "Bebida de almendra bio 200ml eco mil", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 328, name: "Zumo naranja eco", category: "bebidas", image: "<img src='img/316. Zumo naranja.jpg' class='w-full h-full object-contain' />", brand: "Cofrutos", description: "Zumo naranja eco 200ml Cofrutos", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 329, name: "Zumo melocotón eco", category: "bebidas", image: "<img src='img/317. Zumo melocoton.jpeg' class='w-full h-full object-contain' />", brand: "Cofrutos", description: "Zumo melocotón eco 200ml cofrutos", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 330, name: "Zumo piña eco", category: "bebidas", image: "<img src='img/318. Zumo piña.jpg' class='w-full h-full object-contain' />", brand: "Cofrutos", description: "Zumo piña eco 200ml cofrutos", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 331, name: "Bebida de arroz y coco eco", category: "bebidas", image: "<img src='img/319. Bebida arroz y coco.jpg' class='w-full h-full object-contain' />", brand: "Isola bio", description: "Bebida de arroz y coco eco 250ml isola bio", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 332, name: "Zumo manzana eco", category: "bebidas", image: "<img src='img/320. Zumo manzana.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Zumo manzana eco 200ml veritas", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 333, name: "Zumo zanahoria eco", category: "bebidas", image: "<img src='img/321. Zumo zanahorias.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Zumo zanahorias eco 200ml veritas", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 334, name: "Zumo uva negra eco", category: "bebidas", image: "<img src='img/322. Zumo uva negra.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Zumo uva negra eco 200ml veritas", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 335, name: "Zumo pera eco", category: "bebidas", image: "<img src='img/323. Zumo pera.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Zumo pera eco 200ml veritas", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 336, name: "Zumo melocotón eco", category: "bebidas", image: "<img src='img/324. Zumo melocoton.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Zumo melocotón eco 200ml veritas", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 337, name: "Zumo piña eco", category: "bebidas", image: "<img src='img/325. Zumo piña.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Zumo piña eco 200ml veritas", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 338, name: "Zumo naranja eco", category: "bebidas", image: "<img src='img/326. Zumo naranja.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Zumo naranja eco 200ml veritas", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+      { id: 339, name: "Puré de manzana y fresa", category: "bebidas", image: "<img src='img/327. Pure fruta.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Puré frutas manzana fresa 100g veritas", allergens: [], nutrition: { energia: "26 kcal", proteina: "0g", grasas: "0g", carbohidratos: "6.5g", fibra: "0g", sodio: "200mg", azucares: "6g" } },
+
+
+
+
+      // DULCES - Chocolate
+      { id: 87, name: "Chocolate Nocciola Ristora", category: "bebidas", image: "<img src='img/21. Chocolate nocciola ristora.jpg' class='w-full h-full object-contain' />", brand: "Ristora", description: "Chocolate con leche avellana", allergens: ["lactosa", "frutos-secos"], nutrition: { energia: "530 kcal", proteina: "8g", grasas: "32g", carbohidratos: "56g", fibra: "1g", sodio: "80mg", azucares: "52g" } },
+      { id: 88, name: "Chocolate Ristora", category: "bebidas", image: "<img src='img/20. Chocolate ristora.jpg' class='w-full h-full object-contain' />", brand: "Ristora", description: "Chocolate con leche clásico", allergens: ["lactosa"], nutrition: { energia: "520 kcal", proteina: "7.5g", grasas: "31g", carbohidratos: "55g", fibra: "1g", sodio: "75mg", azucares: "50g" } },
+      { id: 89, name: "Chocolate Perugina Nestlé", category: "bebidas", image: "<img src='img/22. Chocolate perugina.png' class='w-full h-full object-contain' />", brand: "Perugina", description: "Bombón chocolate perugina", allergens: ["lactosa", "gluten"], nutrition: { energia: "540 kcal", proteina: "8.5g", grasas: "33g", carbohidratos: "57g", fibra: "1.2g", sodio: "85mg", azucares: "54g" } },
+      { id: 90, name: "Chocolate Sol Nestlé", category: "bebidas", image: "<img src='img/23. Chocolate sol nestle.jpg' class='w-full h-full object-contain' />", brand: "Nestlé", description: "Chocolate con leche sol", allergens: ["lactosa"], nutrition: { energia: "530 kcal", proteina: "8g", grasas: "32g", carbohidratos: "56g", fibra: "1g", sodio: "80mg", azucares: "52g" } },
+      { id: 91, name: "Milk Cream Azul Simat", category: "bebidas", image: "<img src='img/24. Milk cream azul simat.png' class='w-full h-full object-contain' />", brand: "Simat", description: "Crema chocolate azul", allergens: ["lactosa"], nutrition: { energia: "480 kcal", proteina: "6.5g", grasas: "28g", carbohidratos: "52g", fibra: "0.8g", sodio: "70mg", azucares: "48g" } },
+      { id: 226, name: "Leche gogo ristora", category: "bebidas", image: "<img src='img/25. Leche gogo ristora.png' class='w-full h-full object-contain' />", brand: "Ristora", description: "Leche", allergens: ["lactosa"], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "'0'g" } },
+      { id: 227, name: "Leche Bavanda bianca ristora", category: "bebidas", image: "<img src='img/26. Bavanda bianca ristora.jpg' class='w-full h-full object-contain' />", brand: "Ristora", description: "Leche", allergens: ["lactosa"], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g" } },
+      { id: 228, name: "Leche dairy nestle", category: "bebidas", image: "<img src='img/27. Leche dairy nestle.jpg' class='w-full h-full object-contain' />", brand: "Nestlé", description: "Leche", allergens: ["lactosa"], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g" } },
+      { id: 229, name: "Leche semidesnatada bio prolait", category: "bebidas", image: "<img src='img/28. Leche semidesnatada bio prolait.png' class='w-full h-full object-contain' />", brand: "Prolait", description: "Leche semidesnatada", allergens: ["lactosa"], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g" } },
+      { id: 230, name: "Café capsula blue intenso lavazza", category: "cafe", image: "<img src='img/29. Cafe capsula blue intenso lavazza.png' class='w-full h-full object-contain' />", brand: "Lavazza", description: "Café capsula blue intenso", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g" } },
+      { id: 231, name: "Café capsula blue dek lavazza", category: "cafe", image: "<img src='img/30. Cafe capsula blue dek lavazza.png' class='w-full h-full object-contain' />", brand: "Lavazza", description: "Café capsula blue dek", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g" } },
+      { id: 232, name: "Café capsula blue cremoso tupinamba", category: "cafe", image: "<img src='img/31. Cafe capsula blue cremoso tupinamba.jpg' class='w-full h-full object-contain' />", brand: "Tupinamba", description: "Café capsula blue cremoso", allergens: [], nutrition: { energia: "0 kcal", proteina: "0g", grasas: "0g", carbohidratos: "0g", fibra: "0g", sodio: "0mg", azucares: "0g" } },
+      { id: 92, name: "Choco Bom Chocolate Blanco Gullón", category: "dulces", image: "<img src='img/47. Choco bom chocolate blanco.jpg' class='w-full h-full object-contain' />", brand: "Gullón", description: "Chocolate blanco bombón", allergens: ["lactosa", "gluten"], nutrition: { energia: "540 kcal", proteina: "7g", grasas: "34g", carbohidratos: "58g", fibra: "0g", sodio: "90mg", azucares: "56g" } },
+      { id: 93, name: "Choco Bom Chocolate con Leche Gullón", category: "dulces", image: "<img src='img/50. Choco bom chocolate.jpg' class='w-full h-full object-contain' />", brand: "Gullón", description: "Chocolate con leche bombón", allergens: ["lactosa", "gluten"], nutrition: { energia: "530 kcal", proteina: "8g", grasas: "32g", carbohidratos: "56g", fibra: "1g", sodio: "85mg", azucares: "52g" } },
+      { id: 94, name: "Chocolate Soja Gullón", category: "dulces", image: "<img src='img/56. Chocolate soja gullon.jpg' class='w-full h-full object-contain' />", brand: "Gullón", description: "Chocolate con leche soja", allergens: ["lactosa", "soja", "gluten"], nutrition: { energia: "520 kcal", proteina: "8.5g", grasas: "31g", carbohidratos: "54g", fibra: "0.9g", sodio: "82mg", azucares: "50g" } },
+
+      // SNACKS 
+      { id: 95, name: "Pan de Pipas Natur Velarte", category: "snacks", image: "<img src='img/32. Pan de pipas natur velarte.jpg' class='w-full h-full object-contain' />", brand: "Velarte", description: "Pan integral pipas", allergens: ["gluten", "frutos-secos"], nutrition: { energia: "320 kcal", proteina: "10g", grasas: "15g", carbohidratos: "35g", fibra: "5g", sodio: "400mg", azucares: "2g" } },
+      { id: 96, name: "Palitos Integrales Aceite Oliva Velarte", category: "snacks", image: "<img src='img/33. Palitos integrales aceite de oliva velarte.png' class='w-full h-full object-contain' />", brand: "Velarte", description: "Palitos integral oliva", allergens: ["gluten"], nutrition: { energia: "380 kcal", proteina: "8g", grasas: "18g", carbohidratos: "45g", fibra: "4g", sodio: "600mg", azucares: "1g" } },
+      { id: 97, name: "Artesanas Fibra Velarte", category: "snacks", image: "<img src='img/34. Pan de fibra artesanas velarte.jpg' class='w-full h-full object-contain' />", brand: "Velarte", description: "Galletas artesanas fibra", allergens: ["gluten"], nutrition: { energia: "330 kcal", proteina: "7g", grasas: "14g", carbohidratos: "42g", fibra: "6g", sodio: "450mg", azucares: "3g" } },
+      { id: 98, name: "Palitos Aceite Oliva Virgen Velarte", category: "snacks", image: "<img src='img/35. Palitos aceite oliva virgen velarte.png' class='w-full h-full object-contain' />", brand: "Velarte", description: "Palitos oliva virgen extra", allergens: ["gluten"], nutrition: { energia: "390 kcal", proteina: "8.5g", grasas: "19g", carbohidratos: "46g", fibra: "3.5g", sodio: "620mg", azucares: "0.5g" } },
+      { id: 99, name: "Artesanas Pipas Velarte", category: "snacks", image: "<img src='img/36. Pan de pipas artesanas velarte.png' class='w-full h-full object-contain' />", brand: "Velarte", description: "Galletas artesanas pipas", allergens: ["gluten", "frutos-secos"], nutrition: { energia: "340 kcal", proteina: "9g", grasas: "16g", carbohidratos: "41g", fibra: "4.5g", sodio: "420mg", azucares: "2g" } },
+      { id: 100, name: "Barritas Semillas con Almendras Natwins", category: "snacks", image: "<img src='img/37. Barritas con almendras natwins.png' class='w-full h-full object-contain' />", brand: "Natwins", description: "Barrita semillas almendra", allergens: ["frutos-secos", "gluten"], nutrition: { energia: "240 kcal", proteina: "8g", grasas: "14g", carbohidratos: "24g", fibra: "3g", sodio: "80mg", azucares: "8g" } },
+      { id: 102, name: "Barritas Semillas Calabaza Chocolate Natwins", category: "dulces", image: "<img src='img/38. Barritas con semillas calabaza chocolate natwins.jpg' class='w-full h-full object-contain' />", brand: "Natwins", description: "Barrita calabaza chocolate", allergens: ["gluten"], nutrition: { energia: "230 kcal", proteina: "7g", grasas: "10g", carbohidratos: "28g", fibra: "3g", sodio: "100mg", azucares: "12g" } },
+      { id: 103, name: "Tortitas Arroz Chocolate Negro Bicentury", category: "snacks", image: "<img src='img/39. Tortitas arroz choco negro bicentury.jpg' class='w-full h-full object-contain' />", brand: "Bicentury", description: "Tortita arroz chocolate negro", allergens: ["gluten"], nutrition: { energia: "180 kcal", proteina: "3g", grasas: "7g", carbohidratos: "26g", fibra: "1.5g", sodio: "180mg", azucares: "8g" } },
+      { id: 104, name: "Tortita Arroz Sabor Yogurt Bicentury", category: "snacks", image: "<img src='img/40. Tortita arroz sabor yogurt bicentury.jpg' class='w-full h-full object-contain' />", brand: "Bicentury", description: "Tortita arroz yogurt", allergens: ["lactosa", "gluten"], nutrition: { energia: "170 kcal", proteina: "2.8g", grasas: "6.5g", carbohidratos: "25g", fibra: "1g", sodio: "170mg", azucares: "8g" } },
+      { id: 105, name: "Mini Nackis Mediterranea Bicentury", category: "snacks", image: "<img src='img/41. Tortitas mini nackis mediterranea bicentury.jpg' class='w-full h-full object-contain' />", brand: "Bicentury", description: "Mini nackis sabor mediterráneo", allergens: ["gluten"], nutrition: { energia: "472 kcal", proteina: "7.3g", grasas: "17g", carbohidratos: "72g", fibra: "1.6g", sodio: "420mg", azucares: "1g" } },
+      { id: 106, name: "Mini Nackis Tortitas Maiz Bicentury", category: "snacks", image: "<img src='img/42. Tortitas mini maiz nackis bicentury.jpg' class='w-full h-full object-contain' />", brand: "Bicentury", description: "Mini nackis maíz", allergens: [], nutrition: { energia: "185 kcal", proteina: "3.5g", grasas: "7.5g", carbohidratos: "26g", fibra: "0.5g", sodio: "400mg", azucares: "0.5g" } },
+      { id: 107, name: "Sarialis Cereales Chocolate Leche Bicentury", category: "dulces", image: "<img src='img/43. Barritas cereales chocolate sarialis.jpg' class='w-full h-full object-contain' />", brand: "Bicentury", description: "Barrita cereales chocolate", allergens: ["gluten", "lactosa"], nutrition: { energia: "220 kcal", proteina: "5g", grasas: "9g", carbohidratos: "30g", fibra: "1.5g", sodio: "140mg", azucares: "12g" } },
+      { id: 108, name: "Sarialis Cereales Chocolate Negro Bicentury", category: "dulces", image: "<img src='img/44. Barritas cereales chocolate negro sarialis.jpg' class='w-full h-full object-contain' />", brand: "Bicentury", description: "Barrita cereales chocolate negro", allergens: ["gluten"], nutrition: { energia: "215 kcal", proteina: "4.8g", grasas: "8.5g", carbohidratos: "29g", fibra: "2g", sodio: "130mg", azucares: "10g" } },
+      { id: 109, name: "Barritas Chocolate Negro Cereales Sin Gluten Bicentury", category: "dulces", image: "<img src='img/45. Barritas chocolate negro cereales sarialis.png' class='w-full h-full object-contain' />", brand: "Bicentury", description: "Barrita chocolate sin gluten", allergens: [], nutrition: { energia: "210 kcal", proteina: "4.5g", grasas: "8g", carbohidratos: "28g", fibra: "2g", sodio: "120mg", azucares: "9g" } },
+      { id: 110, name: "Barritas Multicereales Chocolate Leche Sin Gluten Bicentury", category: "dulces", image: "<img src='img/46. Barritas multicereales chocolate leche sarialis.png' class='w-full h-full object-contain' />", brand: "Bicentury", description: "Barrita multicereales sin gluten", allergens: ["lactosa"], nutrition: { energia: "205 kcal", proteina: "4.2g", grasas: "7.5g", carbohidratos: "27g", fibra: "1.8g", sodio: "115mg", azucares: "8g" } },
+      { id: 111, name: "Muesli Diet-Fibra Gullón", category: "dulces", image: "<img src='img/48. Diet-fibra muesli gullon.png' class='w-full h-full object-contain' />", brand: "Gullón", description: "Galleta muesli fibra", allergens: ["gluten"], nutrition: { energia: "280 kcal", proteina: "6g", grasas: "10g", carbohidratos: "40g", fibra: "5g", sodio: "250mg", azucares: "8g" } },
+      { id: 112, name: "Mini Digestive Choco Leche Gullón", category: "dulces", image: "<img src='img/49. Mini digestive choco leche gullon.jpg' class='w-full h-full object-contain' />", brand: "Gullón", description: "Mini digestive chocolate", allergens: ["gluten", "lactosa"], nutrition: { energia: "200 kcal", proteina: "3g", grasas: "8g", carbohidratos: "28g", fibra: "1g", sodio: "180mg", azucares: "10g" } },
+      { id: 113, name: "Sandwich Yogurt Vitalday Gullón", category: "dulces", image: "<img src='img/51. Sandwich yogurt vitalday gullon.jpg' class='w-full h-full object-contain' />", brand: "Gullón", description: "Galleta rellena yogurt", allergens: ["gluten", "lactosa"], nutrition: { energia: "240 kcal", proteina: "3.5g", grasas: "9g", carbohidratos: "35g", fibra: "0.5g", sodio: "220mg", azucares: "16g" } },
+      { id: 114, name: "Mini Bites Galletas Calcio Gullón", category: "dulces", image: "<img src='img/52. Galletas mini bites calcio gullon.jpg' class='w-full h-full object-contain' />", brand: "Gullón", description: "Mini galletas calcio", allergens: ["gluten", "lactosa"], nutrition: { energia: "190 kcal", proteina: "3g", grasas: "7g", carbohidratos: "27g", fibra: "0.5g", sodio: "200mg", azucares: "9g" } },
+      { id: 115, name: "Barquillos Vainilla Diet Nature Gullón", category: "dulces", image: "<img src='img/53. Barquillos vainilla diet nature.jpg' class='w-full h-full object-contain' />", brand: "Gullón", description: "Barquillos vainilla diet", allergens: ["gluten", "lactosa"], nutrition: { energia: "210 kcal", proteina: "2.5g", grasas: "8g", carbohidratos: "30g", fibra: "0g", sodio: "180mg", azucares: "8g" } },
+      { id: 116, name: "Vitalday Multifrutas Gullón", category: "dulces", image: "<img src='img/54. Vitalday multifrutas gullon.png' class='w-full h-full object-contain' />", brand: "Gullón", description: "Galleta multifrutas vital", allergens: ["gluten"], nutrition: { energia: "220 kcal", proteina: "2.8g", grasas: "8g", carbohidratos: "32g", fibra: "0.5g", sodio: "200mg", azucares: "14g" } },
+      { id: 117, name: "Barrita Cereales Chocolate Negro Sin Azucares Gullón", category: "dulces", image: "<img src='img/57. Barrita cereales chocolate negro sin azucares gullon.jpg' class='w-full h-full object-contain' />", brand: "Gullón", description: "Barrita sin azúcares", allergens: ["gluten"], nutrition: { energia: "200 kcal", proteina: "4.5g", grasas: "8g", carbohidratos: "24g", fibra: "2g", sodio: "110mg", azucares: "0g" } },
+      { id: 118, name: "Triangulo de Crema Dulcesol", category: "dulces", image: "<img src='img/58. Triangulo crema dulcesol.jpg' class='w-full h-full object-contain' />", brand: "Dulcesol", description: "Triangulito crema pastelería", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "380 kcal", proteina: "3g", grasas: "20g", carbohidratos: "45g", fibra: "0.5g", sodio: "250mg", azucares: "28g" } },
+      { id: 119, name: "Cuadrado de Trufa Dulcesol", category: "dulces", image: "<img src='img/59. Cuadrado de trufa dulcesol.png' class='w-full h-full object-contain' />", brand: "Dulcesol", description: "Cuadrado trufa chocolate", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "390 kcal", proteina: "3.2g", grasas: "21g", carbohidratos: "46g", fibra: "1g", sodio: "260mg", azucares: "30g" } },
+      { id: 120, name: "Palmera Hojaldre Dulcesol", category: "dulces", image: "<img src='img/60. Palmera hojaldre dulcesol.png' class='w-full h-full object-contain' />", brand: "Dulcesol", description: "Palmera hojaldre clásica", allergens: ["gluten", "lactosa"], nutrition: { energia: "350 kcal", proteina: "4g", grasas: "18g", carbohidratos: "42g", fibra: "0.5g", sodio: "240mg", azucares: "18g" } },
+      { id: 121, name: "Palmera Cacao Dulcesol", category: "dulces", image: "<img src='img/61. Palmera cacao dulcesol.jpeg' class='w-full h-full object-contain' />", brand: "Dulcesol", description: "Palmera rellena cacao", allergens: ["gluten", "lactosa"], nutrition: { energia: "370 kcal", proteina: "4.2g", grasas: "19g", carbohidratos: "44g", fibra: "1.5g", sodio: "250mg", azucares: "22g" } },
+      { id: 122, name: "Bulgaro Cacao Dulcesol", category: "dulces", image: "<img src='img/62. Bulgaro cacao dulcesol.png' class='w-full h-full object-contain' />", brand: "Dulcesol", description: "Bulgaro relleno cacao", allergens: ["gluten", "lactosa"], nutrition: { energia: "360 kcal", proteina: "3.8g", grasas: "18.5g", carbohidratos: "43g", fibra: "1g", sodio: "245mg", azucares: "20g" } },
+      { id: 123, name: "Caña Crema Choco Dulcesol", category: "dulces", image: "<img src='img/63. Caña crema choco dulcesol.jpg' class='w-full h-full object-contain' />", brand: "Dulcesol", description: "Caña crema chocolate", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "340 kcal", proteina: "3g", grasas: "17g", carbohidratos: "40g", fibra: "0.5g", sodio: "230mg", azucares: "24g" } },
+      { id: 124, name: "Palmeritas Doble Clasica Dulcesol", category: "dulces", image: "<img src='img/64. Palmeritas doble clasica dulcesol.jpg' class='w-full h-full object-contain' />", brand: "Dulcesol", description: "Palmeritas clásica doble", allergens: ["gluten", "lactosa"], nutrition: { energia: "355 kcal", proteina: "4.1g", grasas: "18g", carbohidratos: "41g", fibra: "0.5g", sodio: "242mg", azucares: "17g" } },
+      { id: 125, name: "Croissant Relleno Cacao Dulcesol", category: "dulces", image: "<img src='img/65. Croissant relleno cacao dulcesol.jpg' class='w-full h-full object-contain' />", brand: "Dulcesol", description: "Croissant cacao relleno", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "380 kcal", proteina: "4g", grasas: "19.5g", carbohidratos: "44g", fibra: "1g", sodio: "260mg", azucares: "26g" } },
+      { id: 126, name: "Palmeritas Doble Choco Reposteria Martinez", category: "dulces", image: "<img src='img/66. Palmeritas doble choco.png' class='w-full h-full object-contain' />", brand: "Martinez", description: "Palmeritas chocolate doble", allergens: ["gluten", "lactosa"], nutrition: { energia: "528 kcal", proteina: "5g", grasas: "31.9g", carbohidratos: "54g", fibra: "2.2g", sodio: "250mg", azucares: "20g" } },
+      { id: 127, name: "Cuadrado de Trufa Reposteria Martinez", category: "dulces", image: "<img src='img/67. Cuadrado de trufa.png' class='w-full h-full object-contain' />", brand: "Martinez", description: "Cuadrado trufa premium", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "441 kcal", proteina: "4.3g", grasas: "22g", carbohidratos: "56g", fibra: "2.6g", sodio: "265mg", azucares: "32g" } },
+      { id: 128, name: "Caña de Crema Bañada Cacao Reposteria Martinez", category: "dulces", image: "<img src='img/68. Caña crema cacao.png' class='w-full h-full object-contain' />", brand: "Martinez", description: "Caña crema bañada", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "444 kcal", proteina: "3.6g", grasas: "22.9g", carbohidratos: "54.1g", fibra: "3.3g", sodio: "235mg", azucares: "27.4g" } },
+      { id: 129, name: "Brownie Inpanasa", category: "dulces", image: "<img src='img/69. Brownie inpanasa.jpg' class='w-full h-full object-contain' />", brand: "Inpanasa", description: "Brownie chocolate denso", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "420 kcal", proteina: "5g", grasas: "22g", carbohidratos: "48g", fibra: "2g", sodio: "280mg", azucares: "35g" } },
+      { id: 130, name: "Magdalena Larga Inpanasa", category: "dulces", image: "<img src='img/70. Magdalena larga inpanasa.png' class='w-full h-full object-contain' />", brand: "Inpanasa", description: "Magdalena larga tierna", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "310 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "42g", fibra: "0.5g", sodio: "240mg", azucares: "20g" } },
+      { id: 131, name: "Magdalena Chispitas Inpanasa", category: "dulces", image: "<img src='img/71. Magdalena chispitas inpanasa.jpg' class='w-full h-full object-contain' />", brand: "Inpanasa", description: "Magdalena con chispitas", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "320 kcal", proteina: "3.6g", grasas: "14.5g", carbohidratos: "43g", fibra: "0.5g", sodio: "245mg", azucares: "22g" } },
+      { id: 132, name: "Conchas Magdalena Codan", category: "dulces", image: "<img src='img/72. Conchas codan.jpg' class='w-full h-full object-contain' />", brand: "Codan", description: "Concha magdalena dulce", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "300 kcal", proteina: "3.3g", grasas: "13g", carbohidratos: "40g", fibra: "0.5g", sodio: "230mg", azucares: "18g" } },
+      { id: 133, name: "Krit Galletas Saladas Cuétara", category: "snacks", image: "<img src='img/73. Krit galletas saladas.png' class='w-full h-full object-contain' />", brand: "Cuétara", description: "Galleta salada crujiente", allergens: ["gluten"], nutrition: { energia: "370 kcal", proteina: "7g", grasas: "15g", carbohidratos: "50g", fibra: "1g", sodio: "650mg", azucares: "1g" } },
+      { id: 134, name: "Bocaditos Limón Cuétara", category: "snacks", image: "<img src='img/74. Bocaditos limon cuetara.jpg' class='w-full h-full object-contain' />", brand: "Cuétara", description: "Bocaditos sabor limón", allergens: ["gluten"], nutrition: { energia: "280 kcal", proteina: "4g", grasas: "9g", carbohidratos: "43g", fibra: "0.5g", sodio: "280mg", azucares: "14g" } },
+      { id: 135, name: "Cake & Fruta Ballará", category: "dulces", image: "<img src='img/75. Cake&fruta ballara.png' class='w-full h-full object-contain' />", brand: "Ballará", description: "Cake con frutas naturales", allergens: ["gluten", "huevo"], nutrition: { energia: "290 kcal", proteina: "3.5g", grasas: "11g", carbohidratos: "42g", fibra: "1g", sodio: "220mg", azucares: "19g" } },
+      { id: 136, name: "Bollycao Bimbo", category: "dulces", image: "<img src='img/76. Bollicao bimbo.jpeg' class='w-full h-full object-contain' />", brand: "Bimbo", description: "Bollicao clásico de siempre", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "368 kcal", proteina: "7.2g", grasas: "13g", carbohidratos: "42g", fibra: "0.5g", sodio: "250mg", azucares: "20g" } },
+      { id: 137, name: "Donut Glacé Bimbo", category: "dulces", image: "<img src='img/77. Donut glace bimbo.jpg' class='w-full h-full object-contain' />", brand: "Bimbo", description: "Donut glasé dulce", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "412 kcal", proteina: "5.3g", grasas: "23g", carbohidratos: "46g", fibra: "3g", sodio: "270mg", azucares: "20g" } },
+      { id: 138, name: "Donut Bombon Bimbo", category: "dulces", image: "<img src='img/78. Donut bombon bimbo.png' class='w-full h-full object-contain' />", brand: "Bimbo", description: "Donut relleno bombón", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "478 kcal", proteina: "5.6g", grasas: "32g", carbohidratos: "42g", fibra: "1g", sodio: "280mg", azucares: "28g" } },
+      { id: 139, name: "Donettes Clásicos Bimbo", category: "dulces", image: "<img src='img/79. Donettes clasicos bombon.jpg' class='w-full h-full object-contain' />", brand: "Bimbo", description: "Donettes mini clásicas", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "457 kcal", proteina: "5.7g", grasas: "26g", carbohidratos: "49g", fibra: "2.0g", sodio: "240mg", azucares: "18g" } },
+      { id: 140, name: "Pantera Rosa Bimbo", category: "dulces", image: "<img src='img/80. Pantera rosa bimbo.jpg' class='w-full h-full object-contain' />", brand: "Bimbo", description: "Pantera rosa de siempre", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "473 kcal", proteina: "4g", grasas: "26g", carbohidratos: "55g", fibra: "1.6g", sodio: "250mg", azucares: "19g" } },
+      { id: 141, name: "Tigreton Bimbo", category: "dulces", image: "<img src='img/81. Tigreton bimbo.png' class='w-full h-full object-contain' />", brand: "Bimbo", description: "Tigreton relleno chocolate", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "382 kcal", proteina: "3.4g", grasas: "13g", carbohidratos: "62g", fibra: "1.5g", sodio: "260mg", azucares: "22g" } },
+      { id: 142, name: "Bony Bimbo", category: "dulces", image: "<img src='img/82. Bony bimbo.jpg' class='w-full h-full object-contain' />", brand: "Bimbo", description: "Bony chocolate y leche", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "414 kcal", proteina: "4g", grasas: "20g", carbohidratos: "52g", fibra: "5g", sodio: "240mg", azucares: "18g" } },
+      { id: 143, name: "Fontaneda Digestive Go Manzana Mondelez", category: "snacks", image: "<img src='img/83. Galleta digestive go manzana.jpg' class='w-full h-full object-contain' />", brand: "Mondelez", description: "Digestive manzana on the go", allergens: ["gluten"], nutrition: { energia: "270 kcal", proteina: "4g", grasas: "10g", carbohidratos: "38g", fibra: "1.5g", sodio: "220mg", azucares: "12g" } },
+      { id: 144, name: "Milka Leo Mondelez", category: "dulces", image: "<img src='img/84. Milka leo.jpg' class='w-full h-full object-contain' />", brand: "Mondelez", description: "Chocolate leo tigreton", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "320 kcal", proteina: "3.2g", grasas: "13g", carbohidratos: "44g", fibra: "0.5g", sodio: "255mg", azucares: "26g" } },
+      { id: 145, name: "Oreo", category: "dulces", image: "<img src='img/85. Oreo.jpg' class='w-full h-full object-contain' />", brand: "Mondelez", description: "Galleta oreo clásica", allergens: ["gluten", "lactosa"], nutrition: { energia: "300 kcal", proteina: "2.8g", grasas: "12g", carbohidratos: "42g", fibra: "1g", sodio: "300mg", azucares: "22g" } },
+      { id: 146, name: "Principe Mondelez", category: "dulces", image: "<img src='img/86. Principe crema chocolate.jpg' class='w-full h-full object-contain' />", brand: "Mondelez", description: "Príncipe chocolate relleno", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "310 kcal", proteina: "3g", grasas: "12.5g", carbohidratos: "43g", fibra: "0.5g", sodio: "280mg", azucares: "21g" } },
+      { id: 147, name: "Chips Ahoy Mondelez", category: "dulces", image: "<img src='img/87. Chips ahoy.jpg' class='w-full h-full object-contain' />", brand: "Mondelez", description: "Chips chocolate ahoy", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "330 kcal", proteina: "3.2g", grasas: "14g", carbohidratos: "45g", fibra: "0.5g", sodio: "310mg", azucares: "24g" } },
+      { id: 148, name: "Mikado", category: "dulces", image: "<img src='img/88. Mikado&go.png' class='w-full h-full object-contain' />", brand: "Mondelez", description: "Mikado palillos chocolate", allergens: ["gluten", "lactosa"], nutrition: { energia: "350 kcal", proteina: "3.5g", grasas: "15g", carbohidratos: "48g", fibra: "0.5g", sodio: "320mg", azucares: "28g" } },
+      { id: 149, name: "Magdalena Clasica Mdalen", category: "dulces", image: "<img src='img/89. Magdalena clasica.jpg' class='w-full h-full object-contain' />", brand: "Mdalen", description: "Magdalena clásica tierna 2u", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "300 kcal", proteina: "3.3g", grasas: "13g", carbohidratos: "40g", fibra: "0.5g", sodio: "230mg", azucares: "18g" } },
+      { id: 150, name: "Kitkat", category: "dulces", image: "<img src='img/90. Kitkat.jpg' class='w-full h-full object-contain' />", brand: "Nestlé", description: "Kit kat chocolate crujiente", allergens: ["gluten", "lactosa"], nutrition: { energia: "320 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "43g", fibra: "0.5g", sodio: "240mg", azucares: "24g" } },
+      { id: 151, name: "Chocolate Crunch Nestlé", category: "dulces", image: "<img src='img/91. Chocolate crunch.png' class='w-full h-full object-contain' />", brand: "Nestlé", description: "Crunch chocolate crujiente", allergens: ["gluten", "lactosa"], nutrition: { energia: "310 kcal", proteina: "3.2g", grasas: "13g", carbohidratos: "42g", fibra: "0.5g", sodio: "230mg", azucares: "23g" } },
+      { id: 152, name: "Barrita Fitness Chocolate Nestlé", category: "saludables", image: "<img src='img/92. Barrita fitness chocolate.png' class='w-full h-full object-contain' />", brand: "Nestlé", description: "Fitness barrita fitness", allergens: ["gluten", "lactosa"], nutrition: { energia: "230 kcal", proteina: "9g", grasas: "8g", carbohidratos: "28g", fibra: "3g", sodio: "180mg", azucares: "8g" } },
+      { id: 153, name: "Twix", category: "dulces", image: "<img src='img/93. Twix.jpg' class='w-full h-full object-contain' />", brand: "Mars", description: "Twix caramelo chocolate", allergens: ["gluten", "lactosa"], nutrition: { energia: "330 kcal", proteina: "2.8g", grasas: "14g", carbohidratos: "46g", fibra: "0.5g", sodio: "240mg", azucares: "32g" } },
+      { id: 154, name: "Kinder Bueno", category: "dulces", image: "<img src='img/94. Kinder bueno.jpg' class='w-full h-full object-contain' />", brand: "Ferrero", description: "Kinder bueno wafer", allergens: ["gluten", "lactosa"], nutrition: { energia: "310 kcal", proteina: "3.5g", grasas: "17g", carbohidratos: "35g", fibra: "0.5g", sodio: "35mg", azucares: "27g" } },
+      { id: 155, name: "Kinder Bueno White", category: "dulces", image: "<img src='img/95. Kinder bueno white.png' class='w-full h-full object-contain' />", brand: "Ferrero", description: "Kinder bueno blanco", allergens: ["gluten", "lactosa"], nutrition: { energia: "315 kcal", proteina: "3.4g", grasas: "17.5g", carbohidratos: "36g", fibra: "0g", sodio: "32mg", azucares: "28g" } },
+      { id: 156, name: "Galletas Rellenas Crema Chocolate Elgorriaga", category: "dulces", image: "<img src='img/96. Galletas rellenas chocolate elgorriaga.png' class='w-full h-full object-contain' />", brand: "Elgorriaga", description: "Galleta rellena crema", allergens: ["gluten", "lactosa"], nutrition: { energia: "320 kcal", proteina: "3g", grasas: "13g", carbohidratos: "44g", fibra: "0.5g", sodio: "280mg", azucares: "22g" } },
+      { id: 157, name: "Filipinos Chocolate Negro Artiach", category: "dulces", image: "<img src='img/97. Filipinos chocolate negro artiach.jpg' class='w-full h-full object-contain' />", brand: "Artiach", description: "Filipinos chocolate negro", allergens: ["gluten", "lactosa"], nutrition: { energia: "513 kcal", proteina: "6.8g", grasas: "26g", carbohidratos: "60g", fibra: "6.1g", sodio: "300mg", azucares: "29g" } },
+      { id: 158, name: "Filipinos Chocolate Blanco Artiach", category: "dulces", image: "<img src='img/98. Filipinos chocolate blanco.jpg' class='w-full h-full object-contain' />", brand: "Artiach", description: "Filipinos chocolate blanco", allergens: ["gluten", "lactosa"], nutrition: { energia: "495 kcal", proteina: "6.6g", grasas: "23g", carbohidratos: "64g", fibra: "2.8g", sodio: "310mg", azucares: "38g" } },
+      { id: 159, name: "Pastelito Cacao Leche Cacaolat", category: "dulces", image: "<img src='img/99. Pastelito cacao leche cacaolat.jpg' class='w-full h-full object-contain' />", brand: "Cacaolat", description: "Pastelito cacao chocolate", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "370 kcal", proteina: "4g", grasas: "17g", carbohidratos: "48g", fibra: "1g", sodio: "260mg", azucares: "30g" } },
+      { id: 160, name: "Chocolate 70% Lacasa", category: "dulces", image: "<img src='img/100. Chocolate 70% lacasa.jpg' class='w-full h-full object-contain' />", brand: "Lacasa", description: "Chocolate negro 70% cacao", allergens: ["lactosa"], nutrition: { energia: "580 kcal", proteina: "10g", grasas: "35g", carbohidratos: "52g", fibra: "5g", sodio: "20mg", azucares: "40g" } },
+      { id: 161, name: "Huesitos Valor Chocolates", category: "dulces", image: "<img src='img/101. Huesitos.jpg' class='w-full h-full object-contain' />", brand: "Valor", description: "Huesitos chocolate blanco", allergens: ["lactosa"], nutrition: { energia: "300 kcal", proteina: "4g", grasas: "17g", carbohidratos: "34g", fibra: "0g", sodio: "30mg", azucares: "32g" } },
+      { id: 162, name: "Tokke Valor Chocolates", category: "dulces", image: "<img src='img/102. Tokke valor.jpg' class='w-full h-full object-contain' />", brand: "Valor", description: "Tokke chocolate relleno", allergens: ["lactosa"], nutrition: { energia: "340 kcal", proteina: "4g", grasas: "19g", carbohidratos: "39g", fibra: "1g", sodio: "35mg", azucares: "35g" } },
+      { id: 163, name: "M&M's", category: "dulces", image: "<img src='img/103. M&M.png' class='w-full h-full object-contain' />", brand: "Mars", description: "M&M's de colores", allergens: ["gluten", "lactosa"], nutrition: { energia: "350 kcal", proteina: "2.8g", grasas: "13g", carbohidratos: "54g", fibra: "0g", sodio: "20mg", azucares: "50g" } },
+      { id: 164, name: "All-Bram Bizcocho Fruta Fibra Kellogg's", category: "saludables", image: "<img src='img/104. All-bram bizcocho fruta y fibra.png' class='w-full h-full object-contain' />", brand: "Kellogg's", description: "All-bran bizcocho fibra", allergens: ["gluten"], nutrition: { energia: "280 kcal", proteina: "5g", grasas: "6g", carbohidratos: "45g", fibra: "7g", sodio: "200mg", azucares: "12g" } },
+      { id: 165, name: "Galleta Cacao Hit Bahlsen", category: "dulces", image: "<img src='img/105. Galleta cacao hit bahlsen.png' class='w-full h-full object-contain' />", brand: "Bahlsen", description: "Galleta cacao hit", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "508 kcal", proteina: "6.7g", grasas: "25g", carbohidratos: "63g", fibra: "0.5g", sodio: "270mg", azucares: "29g" } },
+      { id: 166, name: "Chipicao", category: "dulces", image: "<img src='img/106. Chipicao minicroissants crema cacao.jpg' class='w-full h-full object-contain' />", brand: "Chipicao", description: "Galleta salada chipicao", allergens: ["gluten"], nutrition: { energia: "350 kcal", proteina: "6.5g", grasas: "14g", carbohidratos: "48g", fibra: "0.5g", sodio: "700mg", azucares: "1g" } },
+      { id: 167, name: "Barrita Sésamo Pepitas Choco Pasteleria Larrosa", category: "dulces", image: "<img src='img/107. Barrita sesamo pepitas choco pasteleria larrosa.jpg' class='w-full h-full object-contain' />", brand: "Larrosa", description: "Barrita sésamo chocolate", allergens: ["gluten", "lactosa", "sésamo"], nutrition: { energia: "310 kcal", proteina: "6g", grasas: "15g", carbohidratos: "35g", fibra: "2g", sodio: "140mg", azucares: "16g" } },
+      { id: 168, name: "Quelitas Rustic Integral Quely", category: "saludables", image: "<img src='img/108. Quelitas rustic integral.jpg' class='w-full h-full object-contain' />", brand: "Quely", description: "Galleta rustic integral", allergens: ["gluten"], nutrition: { energia: "300 kcal", proteina: "5.5g", grasas: "10g", carbohidratos: "42g", fibra: "4.5g", sodio: "280mg", azucares: "6g" } },
+      { id: 169, name: "Merienda Chocolate Blanco Quely", category: "dulces", image: "<img src='img/109. Merienda chocolate blanco.jpg' class='w-full h-full object-contain' />", brand: "Quely", description: "Merienda chocolate blanco", allergens: ["gluten", "lactosa"], nutrition: { energia: "320 kcal", proteina: "3g", grasas: "13g", carbohidratos: "44g", fibra: "0.5g", sodio: "270mg", azucares: "24g" } },
+      { id: 170, name: "Merienda Chocolate Quely", category: "dulces", image: "<img src='img/110. Merienda chocolate.jpg' class='w-full h-full object-contain' />", brand: "Quely", description: "Merienda chocolate clásica", allergens: ["gluten", "lactosa"], nutrition: { energia: "310 kcal", proteina: "3g", grasas: "12.5g", carbohidratos: "42g", fibra: "0.5g", sodio: "260mg", azucares: "22g" } },
+      { id: 171, name: "Merienda Cañitas de Fuet Quely", category: "snacks", image: "<img src='img/111. Merienda cañitas fuet.jpg' class='w-full h-full object-contain' />", brand: "Quely", description: "Cañitas saladas fuet", allergens: ["gluten"], nutrition: { energia: "340 kcal", proteina: "7g", grasas: "14g", carbohidratos: "45g", fibra: "0.5g", sodio: "650mg", azucares: "1g" } },
+      { id: 236, name: "Cookie chocolate negro", category: "dulces", image: "<img src='img/236. Cookie chocolate.png' class='w-full h-full object-contain' />", brand: "Natwins", description: "Cookie granola chocolate negro 38g Natwins", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "420 kcal", proteina: "5g", grasas: "22g", carbohidratos: "48g", fibra: "2g", sodio: "280mg", azucares: "35g" } },
+      { id: 237, name: "Cookie manzana", category: "dulces", image: "<img src='img/237. Cookie manzana.png' class='w-full h-full object-contain' />", brand: "Natwins", description: "Cookie manzana 38g Natwins", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "420 kcal", proteina: "5g", grasas: "22g", carbohidratos: "48g", fibra: "2g", sodio: "280mg", azucares: "35g" } },
+      { id: 238, name: "Cookie avellana", category: "dulces", image: "<img src='img/238. Cookie avellana.png' class='w-full h-full object-contain' />", brand: "Natwins", description: "Cookie avellana 38g Natwins", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "420 kcal", proteina: "5g", grasas: "22g", carbohidratos: "48g", fibra: "2g", sodio: "280mg", azucares: "35g" } },
+      { id: 239, name: "Skittles fruits", category: "dulces", image: "<img src='img/240. Skittles fruits.jpg' class='w-full h-full object-contain' />", brand: "Skittles", description: "Skittles fruits 38g", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "420 kcal", proteina: "5g", grasas: "22g", carbohidratos: "48g", fibra: "2g", sodio: "280mg", azucares: "35g" } },
+      { id: 240, name: "Nutella Biscuits", category: "dulces", image: "<img src='img/241. Nutella biscuits.png' class='w-full h-full object-contain' />", brand: "Nutella", description: "Nutella Biscuits x3 41g", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "420 kcal", proteina: "5g", grasas: "22g", carbohidratos: "48g", fibra: "2g", sodio: "280mg", azucares: "35g" } },
+      { id: 241, name: "Nocilla cookies", category: "dulces", image: "<img src='img/242. Nocilla cookies.png' class='w-full h-full object-contain' />", brand: "Nocilla", description: "Nocilla cookies", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "2073 kcal", proteina: "6.5g", grasas: "24g", carbohidratos: "62g", fibra: "2.6g", sodio: "0mg", azucares: "35g" } },
+      { id: 242, name: "Cookies de chocolate sin lactosa", category: "dulces", image: "<img src='img/243. Cookies sin lactosa belsi.jpg' class='w-full h-full object-contain' />", brand: "Belsi", description: "Cookies de chocolate sin lactosa bio 70g Belsi", allergens: ["gluten", "huevo"], nutrition: { energia: "2073 kcal", proteina: "6.5g", grasas: "24g", carbohidratos: "62g", fibra: "2.6g", sodio: "0mg", azucares: "35g" } },
+      { id: 243, name: "Gominolas favoritos Haribo", category: "dulces", image: "<img src='img/244. Gominolas haribo.jpg' class='w-full h-full object-contain' />", brand: "Haribo", description: "Gominolas favoritos Haribo", allergens: ["gluten", "huevo"], nutrition: { energia: "2073 kcal", proteina: "6.5g", grasas: "24g", carbohidratos: "62g", fibra: "2.6g", sodio: "0mg", azucares: "35g" } },
+      { id: 244, name: "Trident Senses Rainforest Mint", category: "dulces", image: "<img src='img/245. Trident senses rainforest mint.jpg' class='w-full h-full object-contain' />", brand: "Trident", description: "Trident senses rainforest mint", allergens: ["gluten", "huevo"], nutrition: { energia: "2073 kcal", proteina: "6.5g", grasas: "24g", carbohidratos: "62g", fibra: "2.6g", sodio: "0mg", azucares: "35g" } },
+      { id: 245, name: "Trident 60 minutes", category: "dulces", image: "<img src='img/246. Trident 60 minutes.jpg' class='w-full h-full object-contain' />", brand: "Trident", description: "Trident 60 minutes", allergens: ["gluten", "huevo"], nutrition: { energia: "2073 kcal", proteina: "6.5g", grasas: "24g", carbohidratos: "62g", fibra: "2.6g", sodio: "0mg", azucares: "35g" } },
+      { id: 246, name: "Orbit menta fuerte", category: "dulces", image: "<img src='img/247. Orbit menta fuerte.jpg' class='w-full h-full object-contain' />", brand: "Orbit", description: "Orbit menta fuerte", allergens: ["gluten", "huevo"], nutrition: { energia: "2073 kcal", proteina: "6.5g", grasas: "24g", carbohidratos: "62g", fibra: "2.6g", sodio: "0mg", azucares: "35g" } },
+      { id: 247, name: "Mini croissants rellenos de crema de cacao", category: "dulces", image: "<img src='img/249. Mini croissants chipicao.jpg' class='w-full h-full object-contain' />", brand: "Chipicao", description: "Mini croissant rellenos crema cacao 80gr", allergens: ["gluten", "huevo"], nutrition: { energia: "2073 kcal", proteina: "6.5g", grasas: "24g", carbohidratos: "62g", fibra: "2.6g", sodio: "0mg", azucares: "35g" } },
+      { id: 248, name: "Barrita de chocolate con caramelo", category: "dulces", image: "<img src='img/250. Barrita extra.jpg' class='w-full h-full object-contain' />", brand: "Kellogg's", description: "Barrita de chocolate con caramelo Extra", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 281, name: "Waffle espelta cacao bio", category: "dulces", image: "<img src='img/280. Waffle espelta.jpg' class='w-full h-full object-contain' />", brand: "Sol Natural", description: "Waffle espelta cacao bio 30g sol natural", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 306, name: "Galletas biochoc cream", category: "dulces", image: "<img src='img/294. Galletas biochoc.jpg' class='w-full h-full object-contain' />", brand: "Belsi", description: "Galletas biochoc cream 70g belsi", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 307, name: "Galletas chocolate avellanas", category: "dulces", image: "<img src='img/295. Galletas choco avellanas.png' class='w-full h-full object-contain' />", brand: "Belsi", description: "Galletas espelta chocolate avellanas 70g belsi", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 308, name: "Galletas chocolate avellanas", category: "dulces", image: "<img src='img/296. Galletas choco avellanas.jpg' class='w-full h-full object-contain' />", brand: "Belsi", description: "Galletas chocolate avellanas 70g belsi", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 317, name: "Tableta extrafina choco negro", category: "dulces", image: "<img src='img/305. Tableta choco negro.jpg' class='w-full h-full object-contain' />", brand: "Rapunzel", description: "Tableta extrafina choco negro 85% 20g rapunzel", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 318, name: "Tableta extrafina choco blanco", category: "dulces", image: "<img src='img/306. Tableta choco blanco.jpg' class='w-full h-full object-contain' />", brand: "Rapunzel", description: "Tableta extrafina choco blanco 20g rapunzel", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 319, name: "Barrita choco leche bio", category: "dulces", image: "<img src='img/307. Barrita choco leche.jpg' class='w-full h-full object-contain' />", brand: "Gepa", description: "Barrita choco leche bio 37,5g gepa", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 357, name: "Dona rellena cacao y avellanas", category: "dulces", image: "<img src='img/345. Dona rellena cacao y avellanas.jpg' class='w-full h-full object-contain' />", brand: "Mandul", description: "Dona rellena cacao y avellanas mandul", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 358, name: "Pastas integrales", category: "dulces", image: "<img src='img/346. Pastas integrales.jpg' class='w-full h-full object-contain' />", brand: "Guembitas", description: "Pastas integrales guembitas 40g", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 362, name: "Mini cookies chocolate", category: "dulces", image: "<img src='img/350. Mini cookies.jpg' class='w-full h-full object-contain' />", brand: "Hacendado", description: "Mini cookies chocolate Hacendado", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 363, name: "Barritas Chips Ahoy", category: "dulces", image: "<img src='img/351. Barritas chips ahoy.jpeg' class='w-full h-full object-contain' />", brand: "Mondelez", description: "Barritas Chips Ahoy", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 364, name: "Galletas bañadas pepitas chocolate colacao", category: "dulces", image: "<img src='img/352. Galletas bañadas colacao.png' class='w-full h-full object-contain' />", brand: "Colacao", description: "Galletas bañadas pepitas chocolate colacao 63g", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      
+      
+      
+      
+      
+      
+      
+      
+
+
+
+      // SALUDABLES - Frutas y Ensaladas
+      { id: 172, name: "Brioche Mixto Jamón y Queso Ñaming", category: "snacks", image: "<img src='img/112. Brioche mixto jamon queso.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Brioche jamón queso", allergens: ["gluten", "lactosa"], nutrition: { energia: "350 kcal", proteina: "9g", grasas: "14g", carbohidratos: "45g", fibra: "1g", sodio: "450mg", azucares: "4g" } },
+      { id: 173, name: "Croissant Mixto Jamón y Queso Ñaming", category: "snacks", image: "<img src='img/113. Croissant mixto jamon queso.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Croissant jamón queso", allergens: ["gluten", "lactosa"], nutrition: { energia: "360 kcal", proteina: "9.5g", grasas: "15g", carbohidratos: "46g", fibra: "1g", sodio: "480mg", azucares: "3g" } },
+      { id: 174, name: "Sandwich Go Pollo y Cheddar Ñaming", category: "saludables", image: "<img src='img/114. Sandwich go pollo cheddar.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Sandwich pollo cheddar", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 288, name: "Sandwich Go Atún Ñaming", category: "saludables", image: "<img src='img/271. Sandwich atun.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Sandwich atún 130g", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 175, name: "Sandwich Go Mixto Ñaming", category: "saludables", image: "<img src='img/115. Sandwich go mixto.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Sandwich mixto jamón", allergens: ["gluten", "lactosa"], nutrition: { energia: "370 kcal", proteina: "15g", grasas: "11g", carbohidratos: "44g", fibra: "1.5g", sodio: "500mg", azucares: "2g" } },
+      { id: 177, name: "Sandwich Go Basic Chorizo Ñaming", category: "snacks", image: "<img src='img/116. Sandwich go chorizo.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Sandwich chorizo", allergens: ["gluten", "lactosa"], nutrition: { energia: "390 kcal", proteina: "14g", grasas: "14g", carbohidratos: "46g", fibra: "1g", sodio: "520mg", azucares: "3g" } },
+      { id: 178, name: "Sandwich Go Barbacoa Ñaming", category: "saludables", image: "<img src='img/117. Sandwich go barbacoa.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Sandwich barbacoa", allergens: ["gluten", "lactosa"], nutrition: { energia: "400 kcal", proteina: "18g", grasas: "12.5g", carbohidratos: "47g", fibra: "1.5g", sodio: "540mg", azucares: "2.5g" } },
+      { id: 179, name: "Sandwich Go Basic Pavo Cheddar Ñaming", category: "saludables", image: "<img src='img/118. Sandwich go basic pavo cheddar.jpg' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Sandwich pavo cheddar", allergens: ["gluten", "lactosa"], nutrition: { energia: "370 kcal", proteina: "17g", grasas: "11g", carbohidratos: "44g", fibra: "1.5g", sodio: "510mg", azucares: "2g" } },
+      { id: 180, name: "Sandwich Go Tortilla York y Queso Ñaming", category: "saludables", image: "<img src='img/119. Sandwich go tortilla, york, queso.jpg' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Tortilla york queso", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "12g", grasas: "10g", carbohidratos: "48g", fibra: "2g", sodio: "500mg", azucares: "2g" } },
+      { id: 181, name: "Sandwich Go Basic Cangrejo Ñaming", category: "saludables", image: "<img src='img/120. Sandwich go cangrejo.jpg' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Sandwich cangrejo", allergens: ["gluten", "lactosa"], nutrition: { energia: "360 kcal", proteina: "15g", grasas: "9.5g", carbohidratos: "43g", fibra: "1.5g", sodio: "490mg", azucares: "2g" } },
+      { id: 182, name: "Ensalada Mixta Ñaming", category: "saludables", image: "<img src='img/121. Ensalada mixta ñaming.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Ensalada verduras frescas", allergens: [], nutrition: { energia: "120 kcal", proteina: "3g", grasas: "8g", carbohidratos: "8g", fibra: "2.5g", sodio: "150mg", azucares: "3g" } },
+      { id: 183, name: "Ensalada Cesar con Pollo Ñaming", category: "saludables", image: "<img src='img/122. Ensalada cesar pollo.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Ensalada cesar pollo", allergens: ["gluten", "lactosa", "huevo"], nutrition: { energia: "280 kcal", proteina: "22g", grasas: "12g", carbohidratos: "18g", fibra: "2g", sodio: "480mg", azucares: "2g" } },
+      { id: 184, name: "Dipping Pot Zanahoria y Hummus Ñaming", category: "saludables", image: "<img src='img/123. Dipping pot zanahoria hummus.jpg' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Dipping hummus zanahoria", allergens: ["sésamo"], nutrition: { energia: "140 kcal", proteina: "4.5g", grasas: "6g", carbohidratos: "16g", fibra: "3.5g", sodio: "200mg", azucares: "2g" } },
+      { id: 185, name: "Fruta Lista Manzana Piña Uva Ñaming", category: "saludables", image: "<img src='img/124. Fruta lista manzana, piña uva.jpg' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Mix frutas frescas", allergens: [], nutrition: { energia: "80 kcal", proteina: "0.8g", grasas: "0.3g", carbohidratos: "19g", fibra: "1.5g", sodio: "5mg", azucares: "16g" } },
+      { id: 186, name: "Ensalada Arroz Carretilla", category: "saludables", image: "<img src='img/125. Ensalada arroz palitos.jpg' class='w-full h-full object-contain' />", brand: "Carretilla", description: "Ensalada arroz vegetal", allergens: ["gluten"], nutrition: { energia: "250 kcal", proteina: "8g", grasas: "9g", carbohidratos: "35g", fibra: "2g", sodio: "380mg", azucares: "3g" } },
+      { id: 187, name: "Ensalada Ligera Carretilla", category: "saludables", image: "<img src='img/126. Ensalada ligera.jpg' class='w-full h-full object-contain' />", brand: "Carretilla", description: "Ensalada ligera diet", allergens: [], nutrition: { energia: "100 kcal", proteina: "4g", grasas: "6g", carbohidratos: "8g", fibra: "2.5g", sodio: "140mg", azucares: "2g" } },
+      { id: 188, name: "Fruta Mixta Arisfresc", category: "saludables", image: "<img src='img/127. Fruta mixta arisfresc.png' class='w-full h-full object-contain' />", brand: "Arisfresc", description: "Mix fruta natural", allergens: [], nutrition: { energia: "85 kcal", proteina: "1g", grasas: "0.3g", carbohidratos: "20g", fibra: "1.5g", sodio: "6mg", azucares: "17g" } },
+      { id: 189, name: "Manzana Fresca Florette", category: "saludables", image: "<img src='img/128. Manzana florette.jpg' class='w-full h-full object-contain' />", brand: "Florette", description: "Manzana roja fresca", allergens: [], nutrition: { energia: "52 kcal", proteina: "0.3g", grasas: "0.2g", carbohidratos: "13g", fibra: "2.4g", sodio: "1mg", azucares: "10g" } },
+      { id: 190, name: "Yogurt Batido Fresa Platano Danone", category: "saludables", image: "<img src='img/129. Yogurt batido fresa platano.jpg' class='w-full h-full object-contain' />", brand: "Danone", description: "Yogurt batido frutas", allergens: ["lactosa"], nutrition: { energia: "120 kcal", proteina: "3.5g", grasas: "3g", carbohidratos: "20g", fibra: "0g", sodio: "100mg", azucares: "18g" } },
+      { id: 191, name: "Yogurt Natural Danone", category: "saludables", image: "<img src='img/130. Yogurt natural danone.png' class='w-full h-full object-contain' />", brand: "Danone", description: "Yogurt natural puro", allergens: ["lactosa"], nutrition: { energia: "60 kcal", proteina: "3.6g", grasas: "0.4g", carbohidratos: "5g", fibra: "0g", sodio: "50mg", azucares: "4g" } },
+      { id: 192, name: "Yogurt Vitalinea Danone", category: "saludables", image: "<img src='img/131. Yogurt vitalinea danone.png' class='w-full h-full object-contain' />", brand: "Danone", description: "Yogur vitaliña light", allergens: ["lactosa"], nutrition: { energia: "40 kcal", proteina: "3.5g", grasas: "0g", carbohidratos: "5g", fibra: "0g", sodio: "70mg", azucares: "2g" } },
+      { id: 220, name: "Ensalada con Alubias y Verduras", category: "saludables", image: "<img src='img/233. Ensalada alubias.png' class='w-full h-full object-contain' />", brand: "Agrucapers", description: "Ensalada con alubias y verduras 250g medisalad", nutrition: { energia: "250 kcal", proteina: "8g", grasas: "9g", carbohidratos: "35g", fibra: "1.5g", sodio: "70mg", azucares: "2g" } },
+      { id: 221, name: "Ensalada quinoa con verduras y tomate seco", category: "saludables", image: "<img src='img/234. Ensalada quinoa.png' class='w-full h-full object-contain' />", brand: "Agrucapers", description: "Ensalada quinoa con verduras y tomate seco", nutrition: { energia: "250 kcal", proteina: "8g", grasas: "9g", carbohidratos: "35g", fibra: "1.5g", sodio: "70mg", azucares: "2g" } },
+      { id: 222, name: "Ensalada verduras asadas con aceitunas negras y especias", category: "saludables", image: "<img src='img/235. Ensalada verduras.png' class='w-full h-full object-contain' />", brand: "Agrucapers", description: "Ensalada verduras asadas con aceitunas negras y especias", nutrition: { energia: "250 kcal", proteina: "8g", grasas: "9g", carbohidratos: "35g", fibra: "1.5g", sodio: "70mg", azucares: "2g" } },
+      { id: 273, name: "Yogur de proteínas Frambuesa", category: "saludables", image: "<img src='img/261. Yogur bebible proteico Yopro Frambuesa.png' class='w-full h-full object-contain' />", brand: "YoPro", description: "Yogur proteína frambuesa YoPro 25g", allergens: ["lactosa"], nutrition: { energia: "40 kcal", proteina: "3.5g", grasas: "0g", carbohidratos: "5g", fibra: "0g", sodio: "70mg", azucares: "2g" } },
+      { id: 274, name: "Yogur de proteínas Vainilla & Cookies", category: "saludables", image: "<img src='img/262. Yogur vainilla cookies.png' class='w-full h-full object-contain' />", brand: "YoPro", description: "Yogur proteína vainilla&cookies YoPro 25g", allergens: ["lactosa"], nutrition: { energia: "40 kcal", proteina: "3.5g", grasas: "0g", carbohidratos: "5g", fibra: "0g", sodio: "70mg", azucares: "2g" } },
+      { id: 274, name: "Yogur de proteínas Coco", category: "saludables", image: "<img src='img/263. Yogur coco.png' class='w-full h-full object-contain' />", brand: "YoPro", description: "Yogur proteína Coco YoPro 25g", allergens: ["lactosa"], nutrition: { energia: "40 kcal", proteina: "3.5g", grasas: "0g", carbohidratos: "5g", fibra: "0g", sodio: "70mg", azucares: "2g" } },
+      { id: 274, name: "Yogur de proteínas UTH Vainilla", category: "saludables", image: "<img src='img/264. Yogur uth vainilla.jpg' class='w-full h-full object-contain' />", brand: "YoPro", description: "Yogur proteína UTH Vainilla 15g", allergens: ["lactosa"], nutrition: { energia: "40 kcal", proteina: "3.5g", grasas: "0g", carbohidratos: "5g", fibra: "0g", sodio: "70mg", azucares: "2g" } },
+      { id: 274, name: "Yogur de proteínas UTH Chocolate", category: "saludables", image: "<img src='img/265. Yogur uth chocolate.png' class='w-full h-full object-contain' />", brand: "YoPro", description: "Yogur proteína UTH chocolate 15g", allergens: ["lactosa"], nutrition: { energia: "40 kcal", proteina: "3.5g", grasas: "0g", carbohidratos: "5g", fibra: "0g", sodio: "70mg", azucares: "2g" } },
+      { id: 280, name: "Bloomer de pavo braseado", category: "saludables", image: "<img src='img/267. Bloomer pavo.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Bloomer pavo braseado 190g Ñaming", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 281, name: "Bloomer de pollo barbacoa", category: "saludables", image: "<img src='img/268. Bloomer pollo.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Bloomer pollo barbacoa 190g Ñaming", allergens: ["gluten", "huevo"], nutrition: { energia: "2192 kcal", proteina: "14g", grasas: "31g", carbohidratos: "45g", fibra: "5.2g", sodio: "0mg", azucares: "8.3g" } },
+      { id: 282, name: "Yogur Danone Fresa", category: "saludables", image: "<img src='img/269. Danone fresa.jpg' class='w-full h-full object-contain' />", brand: "Danone", description: "Yogur danone de fresa", allergens: ["lactosa"], nutrition: { energia: "40 kcal", proteina: "3.5g", grasas: "0g", carbohidratos: "5g", fibra: "0g", sodio: "70mg", azucares: "2g" } },
+      { id: 283, name: "Yogur Cremoso Fresa Pascual", category: "saludables", image: "<img src='img/270. Yogur fresa pascual.jpeg' class='w-full h-full object-contain' />", brand: "Pascual", description: "Yogur cremoso de fresa Pascual 188ml", allergens: ["lactosa"], nutrition: { energia: "40 kcal", proteina: "3.5g", grasas: "0g", carbohidratos: "5g", fibra: "0g", sodio: "70mg", azucares: "2g" } },
+      { id: 285, name: "Bocadillo atún y huevo", category: "saludables", image: "<img src='img/272. Bocadillo atun.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Bocadillo atún y huevo Ñaming", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 286, name: "Bocadillo jamón serrano", category: "saludables", image: "<img src='img/273. Bocadillo jamon.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Bocadillo jamón serrano", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 287, name: "Bocadillo pollo y queso cheddar", category: "saludables", image: "<img src='img/274. Bocadillo pollo.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Bocadillo pollo y queso cheddar", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 289, name: "Bocadillo tortilla de patatas", category: "saludables", image: "<img src='img/275. Bocadillo tortilla.png' class='w-full h-full object-contain' />", brand: "Ñaming", description: "Bocadillo tortilla de patatas", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 292, name: "Anacardos eco", category: "saludables", image: "<img src='img/281. Anacardos.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Anacardos eco 30g veritas", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 293, name: "Nueces grano eco", category: "saludables", image: "<img src='img/282. Nueces.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Nueces grano eco 30g veritas", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 296, name: "Barrita cereales arandanos bio", category: "saludables", image: "<img src='img/284. Barrita cereales arandanos.png' class='w-full h-full object-contain' />", brand: "Delicatalia", description: "Barrita cereales arandanos bio 50g delicatalia", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 297, name: "Barrita cereales fruta choco bio", category: "saludables", image: "<img src='img/285. Barrita cereales fruta choco.png' class='w-full h-full object-contain' />", brand: "Delicatalia", description: "Barrita cereales fruta choco bio 50g delicatalia", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 298, name: "Barrita de sésamo eco", category: "saludables", image: "<img src='img/286. Barrita sesamo.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Barrita cereales fruta choco bio 50g delicatalia", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 299, name: "Barrita semillas calabaza eco", category: "saludables", image: "<img src='img/287. Barrita calabaza.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Barrita cereales fruta choco bio 50g delicatalia", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 300, name: "Barrita frutos secos eco", category: "saludables", image: "<img src='img/288. Barrita frutos secos.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Barrita cereales fruta choco bio 50g delicatalia", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 301, name: "Barrita almendras miel eco", category: "saludables", image: "<img src='img/289. Barrita almendra miel.jpg' class='w-full h-full object-contain' />", brand: "Biocomercio", description: "Barrita almendras miel eco 25g biocomercio", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 302, name: "Palitos clásicos eco", category: "saludables", image: "<img src='img/289. Barrita almendra miel.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Palitos clásicos eco 50g veritas", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 303, name: "Palitos integrales eco", category: "saludables", image: "<img src='img/291. Palitos integrales.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Palitos integrales eco 50g veritas", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 304, name: "Snack mais semi chia bio", category: "saludables", image: "<img src='img/292. Snack mais semi chia.png' class='w-full h-full object-contain' />", brand: "Fiorentini", description: "Snack mais semi chia bio 50g fiorentini", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 305, name: "Palitos integrales eco", category: "saludables", image: "<img src='img/293. Palitos integrales.jpg' class='w-full h-full object-contain' />", brand: "Biocop", description: "Palitos integral espelta eco 50g", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 340, name: "Ensalada de pasta con atún", category: "saludables", image: "<img src='img/328. Ensalada pasta atun.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Ensalada de pasta con atún", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 341, name: "Ensalada vegetal de cangrejo", category: "saludables", image: "<img src='img/329. Ensalada vegetal cangrejo.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Ensalada vegetal de cangrejo", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 342, name: "Ensaladilla con atún", category: "saludables", image: "<img src='img/330. Ensaladilla atun.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Ensaladilla con atún", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 343, name: "Pastel de atún", category: "saludables", image: "<img src='img/331. Pastel atun.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Pastel de atún", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 344, name: "Tallarines carbonara", category: "saludables", image: "<img src='img/332. Tallarines carbonara.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Tallarines carbonara", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 345, name: "Risotto de boletus", category: "saludables", image: "<img src='img/333. Risotto boletus.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Risotto de boletus", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 346, name: "Nuggets", category: "saludables", image: "<img src='img/334. Nuggets.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Nuggets", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 347, name: "Crema de verduras", category: "saludables", image: "<img src='img/335. Crema de verduras.png' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Crema de verduras", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 348, name: "Ensaladilla rusa con atún", category: "saludables", image: "<img src='img/336. Ensaladilla rusa con atun.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Ensaladilla rusa con atún", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 349, name: "Macarrones a la boloñesa", category: "saludables", image: "<img src='img/337. Macarrones boloñesa.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Macarrones a la boloñesa", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 350, name: "Arroz de verduras con tofu", category: "saludables", image: "<img src='img/338. Arroz verduras.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Arroz de montaña", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 351, name: "Lasaña", category: "saludables", image: "<img src='img/339. Lasaña.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Lasaña", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 352, name: "Tortellinis boloñesa", category: "saludables", image: "<img src='img/340. Tortellinis boloñesa.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Tortellinis boloñesa", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 353, name: "Fideua", category: "saludables", image: "<img src='img/341. Fideua.png' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Fideua", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 354, name: "Paella marinera", category: "saludables", image: "<img src='img/342. Paella.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Paella marinera", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+      { id: 355, name: "Gazpacho", category: "saludables", image: "<img src='img/343. Gazpacho.jpg' class='w-full h-full object-contain' />", brand: "Casa Mas", description: "Gazpacho", allergens: ["gluten", "lactosa"], nutrition: { energia: "380 kcal", proteina: "18g", grasas: "12g", carbohidratos: "45g", fibra: "2g", sodio: "520mg", azucares: "3g" } },
+
+
+
+      // SNACKS - Frutos Secos y Chips
+      { id: 193, name: "Contraste Revuelto Frutos Secos Facundo", category: "snacks", image: "<img src='img/132. Contraste facundo.jpg' class='w-full h-full object-contain' />", brand: "Facundo", description: "Mix frutos secos revuelto", allergens: ["frutos-secos", "cacahuete"], nutrition: { energia: "600 kcal", proteina: "18g", grasas: "52g", carbohidratos: "20g", fibra: "4g", sodio: "180mg", azucares: "8g" } },
+      { id: 194, name: "Natuchips Tomate Queso Oregano Grefusa", category: "snacks", image: "<img src='img/133. Natuchips grefusa.png' class='w-full h-full object-contain' />", brand: "Grefusa", description: "Chips tomate queso", allergens: ["gluten", "lactosa"], nutrition: { energia: "340 kcal", proteina: "5g", grasas: "13g", carbohidratos: "48g", fibra: "1g", sodio: "580mg", azucares: "2g" } },
+      { id: 195, name: "Mistercorn Maiz Grefusa", category: "snacks", image: "<img src='img/134. Mistercorn grefusa.jpg' class='w-full h-full object-contain' />", brand: "Grefusa", description: "Mistercorn maíz tostado", allergens: [], nutrition: { energia: "360 kcal", proteina: "4.5g", grasas: "15g", carbohidratos: "50g", fibra: "0.5g", sodio: "620mg", azucares: "1g" } },
+      { id: 196, name: "Mistercorn Mix5 Grefusa", category: "snacks", image: "<img src='img/135. Mistercorn mix5.png' class='w-full h-full object-contain' />", brand: "Grefusa", description: "Mistercorn mix 5 sabores", allergens: ["gluten", "lactosa"], nutrition: { energia: "350 kcal", proteina: "4.5g", grasas: "14g", carbohidratos: "49g", fibra: "0.5g", sodio: "600mg", azucares: "2g" } },
+      { id: 197, name: "Kikonazo Churruca", category: "snacks", image: "<img src='img/136. Kikonazo churruca.jpg' class='w-full h-full object-contain' />", brand: "Churruca", description: "Kikonazo maíz crujiente", allergens: [], nutrition: { energia: "380 kcal", proteina: "5g", grasas: "16g", carbohidratos: "52g", fibra: "1g", sodio: "640mg", azucares: "1.5g" } },
+      { id: 198, name: "Almendras al Horno Matutano", category: "snacks", image: "<img src='img/137. Almendras al horno.jpg' class='w-full h-full object-contain' />", brand: "Matutano", description: "Almendras tostadas", allergens: ["frutos-secos"], nutrition: { energia: "600 kcal", proteina: "21g", grasas: "54g", carbohidratos: "16g", fibra: "3.5g", sodio: "200mg", azucares: "4g" } },
+      { id: 199, name: "Frutos Secos Natura Borges", category: "snacks", image: "<img src='img/138. Frutos secos natura.jpg' class='w-full h-full object-contain' />", brand: "Borges", description: "Mix frutos secos naturales", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 200, name: "Doritos Tex-Mex Matutano", category: "snacks", image: "<img src='img/139. Doritos tex-mex.png' class='w-full h-full object-contain' />", brand: "Matutano", description: "Doritos mexicanos", allergens: ["gluten"], nutrition: { energia: "380 kcal", proteina: "4g", grasas: "14g", carbohidratos: "55g", fibra: "0.5g", sodio: "680mg", azucares: "1g" } },
+      { id: 201, name: "Lay's Patatas Matutano", category: "snacks", image: "<img src='img/140. Lays patatas.png' class='w-full h-full object-contain' />", brand: "Matutano", description: "Lay's patatas clásicas", allergens: [], nutrition: { energia: "360 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "52g", fibra: "1g", sodio: "600mg", azucares: "0.5g" } },
+      { id: 202, name: "Patatas Jamón Onduladas Matutano", category: "snacks", image: "<img src='img/141. Patatas jamon onduladas.jpg' class='w-full h-full object-contain' />", brand: "Matutano", description: "Patatas jamón onduladas", allergens: ["gluten"], nutrition: { energia: "370 kcal", proteina: "4g", grasas: "14.5g", carbohidratos: "52g", fibra: "1g", sodio: "620mg", azucares: "1g" } },
+      { id: 203, name: "Patatas Chips Premium Frit Ravich", category: "snacks", image: "<img src='img/142. Patatas fritas premium.jpg' class='w-full h-full object-contain' />", brand: "Frit Ravich", description: "Patatas fritas premium", allergens: [], nutrition: { energia: "380 kcal", proteina: "3.5g", grasas: "15g", carbohidratos: "54g", fibra: "1g", sodio: "610mg", azucares: "0g" } },
+      { id: 204, name: "Patatas Onduladas Frit Ravich", category: "snacks", image: "<img src='img/143. Patatas fritas onduladas crujientes.png' class='w-full h-full object-contain' />", brand: "Frit Ravich", description: "Patatas onduladas frit ravich 40g", allergens: [], nutrition: { energia: "370 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "52g", fibra: "1g", sodio: "600mg", azucares: "0g" } },
+      { id: 205, name: "Patatas Onduladas Jamón Frit Ravich", category: "snacks", image: "<img src='img/144. Patatas fritas onduladas jamon.png' class='w-full h-full object-contain' />", brand: "Frit Ravich", description: "Patatas onduladas jamón", allergens: ["gluten"], nutrition: { energia: "375 kcal", proteina: "3.8g", grasas: "14.5g", carbohidratos: "52g", fibra: "1g", sodio: "620mg", azucares: "0.5g" } },
+      { id: 206, name: "Kids Ruedas Frit Ravich", category: "snacks", image: "<img src='img/145. Kids ruedas.png' class='w-full h-full object-contain' />", brand: "Frit Ravich", description: "Ruedas infantiles maíz", allergens: [], nutrition: { energia: "340 kcal", proteina: "3g", grasas: "13g", carbohidratos: "49g", fibra: "0.5g", sodio: "500mg", azucares: "1g" } },
+      { id: 207, name: "Tronkess Queso Frit Ravich", category: "snacks", image: "<img src='img/146. Tronkess queso.jpg' class='w-full h-full object-contain' />", brand: "Frit Ravich", description: "Tronkess sabor queso", allergens: ["lactosa"], nutrition: { energia: "360 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "51g", fibra: "0.5g", sodio: "580mg", azucares: "1g" } },
+      { id: 209, name: "Coctel Natumix sin Sal Frit Ravich", category: "snacks", image: "<img src='img/148. Coctel frutos secos.jpg' class='w-full h-full object-contain' />", brand: "Frit Ravich", description: "Cocktail frutos sin sal", allergens: ["frutos-secos", "cacahuete"], nutrition: { energia: "580 kcal", proteina: "18g", grasas: "51g", carbohidratos: "19g", fibra: "4g", sodio: "80mg", azucares: "6g" } },
+      { id: 210, name: "Cocteleo Sin Cascara Frit Ravich", category: "snacks", image: "<img src='img/149. Cocteleo frit ravich.jpg' class='w-full h-full object-contain' />", brand: "Frit Ravich", description: "Cacahuete sin cascara", allergens: ["cacahuete"], nutrition: { energia: "600 kcal", proteina: "28g", grasas: "50g", carbohidratos: "18g", fibra: "2.5g", sodio: "480mg", azucares: "2g" } },
+      { id: 211, name: "Maiz Blando Barbacoa Frit Ravich", category: "snacks", image: "<img src='img/150. Maiz blando barbacoa.png' class='w-full h-full object-contain' />", brand: "Frit Ravich", description: "Maíz blando barbacoa", allergens: ["gluten"], nutrition: { energia: "350 kcal", proteina: "3.5g", grasas: "13g", carbohidratos: "50g", fibra: "0.5g", sodio: "600mg", azucares: "1g" } },
+      { id: 212, name: "Cacahuete Salado Frit Ravich", category: "snacks", image: "<img src='img/151. Cacahuete salado.jpg' class='w-full h-full object-contain' />", brand: "Frit Ravich", description: "Cacahuete salado crujiente", allergens: ["cacahuete"], nutrition: { energia: "585 kcal", proteina: "26g", grasas: "48g", carbohidratos: "18g", fibra: "3g", sodio: "540mg", azucares: "2g" } },
+      { id: 213, name: "Torcis Tosfrit", category: "snacks", image: "<img src='img/152. Torcis tosfrit.png' class='w-full h-full object-contain' />", brand: "Tosfrit", description: "Torcis maíz crujientes", allergens: [], nutrition: { energia: "370 kcal", proteina: "3.5g", grasas: "14.5g", carbohidratos: "51g", fibra: "0.5g", sodio: "610mg", azucares: "0.5g" } },
+      { id: 214, name: "Patatas Caseras Risi", category: "snacks", image: "<img src='img/153. Patatas caseras risi.jpg' class='w-full h-full object-contain' />", brand: "Risi", description: "Patatas caseras saladas", allergens: [], nutrition: { energia: "380 kcal", proteina: "3.5g", grasas: "15g", carbohidratos: "54g", fibra: "1g", sodio: "620mg", azucares: "0g" } },
+      { id: 215, name: "Ristretos Risi", category: "snacks", image: "<img src='img/154. Ristretos risi.jpg' class='w-full h-full object-contain' />", brand: "Risi", description: "Ristretos snack crujiente", allergens: [], nutrition: { energia: "360 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "51g", fibra: "1g", sodio: "580mg", azucares: "0g" } },
+      { id: 216, name: "Mios Cebolla Balsam Modena Risi", category: "snacks", image: "<img src='img/155. Mios cebolla balsam modena risi.png' class='w-full h-full object-contain' />", brand: "Risi", description: "Mios cebolla balsámico", allergens: ["gluten"], nutrition: { energia: "340 kcal", proteina: "3g", grasas: "13g", carbohidratos: "48g", fibra: "1g", sodio: "520mg", azucares: "2g" } },
+      { id: 217, name: "Mios Chia Sal Marina Risi", category: "snacks", image: "<img src='img/156. Mios chia sal marina risi.png' class='w-full h-full object-contain' />", brand: "Risi", description: "Mios chía sal marina", allergens: [], nutrition: { energia: "330 kcal", proteina: "3.5g", grasas: "12.5g", carbohidratos: "47g", fibra: "1.5g", sodio: "560mg", azucares: "1g" } },
+      { id: 218, name: "Triskys Risi", category: "snacks", image: "<img src='img/157. Triskys risi.jpg' class='w-full h-full object-contain' />", brand: "Risi", description: "Triskys snack triangular", allergens: [], nutrition: { energia: "350 kcal", proteina: "3.5g", grasas: "13.5g", carbohidratos: "49g", fibra: "1g", sodio: "600mg", azucares: "0.5g" } },
+      { id: 219, name: "Patatas Onduladas Originales Risi", category: "snacks", image: "<img src='img/158. Patatas onduladas originales risi.jpg' class='w-full h-full object-contain' />", brand: "Risi", description: "Patatas onduladas risi", allergens: [], nutrition: { energia: "370 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "52g", fibra: "1g", sodio: "600mg", azucares: "0g" } },
+      { id: 234, name: "Gublins Grefusa", category: "snacks", image: "<img src='img/239. Gublins grefusa.png' class='w-full h-full object-contain' />", brand: "Grefusa", description: "Patatas onduladas risi", allergens: [], nutrition: { energia: "370 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "52g", fibra: "1g", sodio: "600mg", azucares: "0g" } },
+      { id: 291, name: "Patatas chips marinas", category: "snacks", image: "<img src='img/276. Patatas fritas marinas.jpg' class='w-full h-full object-contain' />", brand: "Vicente Vidal", description: "Patatas fritas marina con aceite de oliva 47g", allergens: [], nutrition: { energia: "370 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "52g", fibra: "1g", sodio: "600mg", azucares: "0g" } },
+      { id: 292, name: "Tortitas arroz choco negro eco", category: "snacks", image: "<img src='img/277. Tortitas arroz choco negro.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Tortitas arroz choco negro eco 100g veritas", allergens: [], nutrition: { energia: "370 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "52g", fibra: "1g", sodio: "600mg", azucares: "0g" } },
+      { id: 293, name: "Tortitas arroz choco leche eco", category: "snacks", image: "<img src='img/279. Tortitas arroz choco leche.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Tortitas arroz choco leche eco 100g veritas", allergens: [], nutrition: { energia: "370 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "52g", fibra: "1g", sodio: "600mg", azucares: "0g" } },
+      { id: 294, name: "Tortitas arroz yogur eco", category: "snacks", image: "<img src='img/278. Tortitas arroz yogur.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Tortitas arroz yogur eco 100g veritas", allergens: [], nutrition: { energia: "370 kcal", proteina: "3.5g", grasas: "14g", carbohidratos: "52g", fibra: "1g", sodio: "600mg", azucares: "0g" } },
+      { id: 295, name: "Patatas chips bio-eco", category: "snacks", image: "<img src='img/283. Patatas fritas natursoy.jpg' class='w-full h-full object-contain' />", brand: "Natursoy", description: "Patatas fritas bio-eco 40g natursoy", allergens: [], nutrition: { energia: "380 kcal", proteina: "3.5g", grasas: "15g", carbohidratos: "54g", fibra: "1g", sodio: "620mg", azucares: "0g" } },
+      { id: 309, name: "Almendras drudaeco", category: "snacks", image: "<img src='img/297. Almendras drudaeco.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Almendras drudaeco 150g veritas", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 310, name: "Cortezas de lentejas eco", category: "snacks", image: "<img src='img/298. Cortezas de lentejas.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Cortezas de lentejas eco 65g veritas", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 311, name: "Varitas de verdura", category: "snacks", image: "<img src='img/299. Varitas de verdura.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Varitas de verdura eco 70g veritas", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 312, name: "Nachos natural eco", category: "snacks", image: "<img src='img/300. Nachos natural.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Nachos natural eco 125g veritas", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 313, name: "Nachos barbacoa eco", category: "snacks", image: "<img src='img/301. Nachos barbacoa.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Nachos barbacoa eco 125g veritas", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 314, name: "Nachos queso eco", category: "snacks", image: "<img src='img/302. Nachos queso.jpg' class='w-full h-full object-contain' />", brand: "Veritas", description: "Nachos queso eco 125g veritas", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 315, name: "Snack de patata, zanahoria y remolacha fritas", category: "snacks", image: "<img src='img/303. Snack patata, zanahoria, remolacha.jpg' class='w-full h-full object-contain' />", brand: "Soria Natural", description: "Mixto vegetal eco 30gr soria natural", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 316, name: "Snack mais rosmarino bio", category: "snacks", image: "<img src='img/304. Snack mais rosmarino.jpg' class='w-full h-full object-contain' />", brand: "Fiorentini", description: "Snack mais rosmarino bio 50g fiorentini", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 356, name: "Patatas crunch tijuana", category: "snacks", image: "<img src='img/344. Patatas tijuana.jpg' class='w-full h-full object-contain' />", brand: "Grefusa", description: "Patatas chips tijuana crunch grefusa 45g", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 359, name: "Bocaditos tomate y orégano", category: "snacks", image: "<img src='img/347. Bocaditos tomate.jpeg' class='w-full h-full object-contain' />", brand: "Anitin", description: "Bocaditos tomate y orégano 80g anitin", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 360, name: "Bocaditos pizza", category: "snacks", image: "<img src='img/348. Bocaditos pizza.jpg' class='w-full h-full object-contain' />", brand: "Anitin", description: "Bocaditos pizza 80g anitin", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      { id: 361, name: "Jumpers ketchup", category: "snacks", image: "<img src='img/349. Jumpers ketchup.png' class='w-full h-full object-contain' />", brand: "Jumpers", description: "Jumpers ketchup 42g", allergens: ["frutos-secos"], nutrition: { energia: "559 kcal", proteina: "18g", grasas: "43g", carbohidratos: "21g", fibra: "8.2g", sodio: "150mg", azucares: "20g" } },
+      
+    ];
+
+    let state = {
+      searchQuery: '',
+      activeCategory: 'all',
+      activeAllergen: 'none',
+      sortBy: 'name'
+    };
+
+    const defaultConfig = {
+      section_title: 'NUESTROS PRODUCTOS',
+      search_placeholder: 'Buscar productos, marcas o ingredientes...'
+    };
+
+    let config = { ...defaultConfig };
+
+    function renderProducts() {
+      const grid = document.getElementById('products-grid');
+      const noResults = document.getElementById('no-results');
+      const resultsCount = document.getElementById('results-count');
+      
+      let filtered = products.filter(product => {
+        if (state.activeCategory !== 'all' && product.category !== state.activeCategory) {
+          return false;
+        }
+        
+        if (state.activeAllergen !== 'none' && product.allergens.includes(state.activeAllergen)) {
+          return false;
+        }
+        
+        if (state.searchQuery) {
+          const query = state.searchQuery.toLowerCase();
+          const searchableText = `${product.name} ${product.brand} ${product.description}`.toLowerCase();
+          if (!searchableText.includes(query)) return false;
+        }
+        
+        return true;
+      });
+
+      filtered.sort((a, b) => {
+        switch (state.sortBy) {
+          case 'name':
+            return a.name.localeCompare(b.name);
+          case 'name-desc':
+            return b.name.localeCompare(a.name);
+          case 'brand':
+            return a.brand.localeCompare(b.brand);
+          default:
+            return 0;
+        }
+      });
+
+      resultsCount.textContent = `Mostrando ${filtered.length} de ${products.length} productos`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        noResults.classList.remove('hidden');
+        return;
+      }
+
+      noResults.classList.add('hidden');
+      
+      grid.innerHTML = filtered.map(product => `
+        <div class="product-card bg-white rounded-2xl border-2 border-gray-100 overflow-hidden cursor-pointer hover:border-cyan-400" onclick="openModal(${product.id})">
+          <div class="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center text-7xl">
+            ${product.image}
+          </div>
+          <div class="p-4">
+            <p class="text-xs font-bold text-cyan-600 uppercase tracking-wider mb-1">${product.brand}</p>
+            <h3 class="text-base font-bold text-gray-900 leading-snug mb-1">${product.name}</h3>
+            <p class="text-xs text-gray-600 mb-3 line-clamp-2">${product.description}</p>
+            
+            <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+              <span class="text-sm font-bold text-gray-700">${product.nutrition.energia}</span>
+              <button class="text-cyan-600 text-sm font-bold hover:text-cyan-700 flex items-center gap-1 transition">
+                Ver
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openModal(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      const modal = document.getElementById('product-modal');
+      const modalContent = document.getElementById('modal-content');
+
+      const allergenLabels = {
+        'gluten': '🌾 Gluten',
+        'lactosa': '🥛 Lactosa',
+        'frutos-secos': '🥜 Frutos Secos',
+        'cacahuete': '🥜 Cacahuete',
+        'soja': '🫘 Soja',
+        'huevo': '🥚 Huevo',
+        'sulfitos': '⚠️ Sulfitos',
+        'sésamo': '芝 Sésamo'
+      };
+
+      const allergenHTML = product.allergens.length > 0 
+        ? product.allergens.map(a => `<span class="allergen-badge">${allergenLabels[a] || a}</span>`).join('')
+        : '<span class="text-green-600 font-bold text-sm">✓ Sin alérgenos comunes</span>';
+
+      modalContent.innerHTML = `
+        <div class="relative">
+          <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 bg-black/10 hover:bg-black/20 rounded-full flex items-center justify-center transition z-10">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+          
+          <div class="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-8xl">
+            ${product.image}
+          </div>
+          
+          <div class="p-8">
+            <div class="mb-6">
+              <p class="text-xs font-bold text-cyan-600 uppercase tracking-wider mb-2">${product.brand}</p>
+              <h2 class="text-2xl font-bold text-gray-900 mb-1">${product.name}</h2>
+              <p class="text-gray-600 text-sm mb-4">${product.description}</p>
+              
+              <div class="mb-4">
+                <p class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Alérgenos</p>
+                <div>${allergenHTML}</div>
+              </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-6">
+              <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4">Información Nutricional (por 100g)</h3>
+              <table class="nutrition-table">
+                <tr>
+                  <td>Valor energético</td>
+                  <td>${product.nutrition.energia}</td>
+                </tr>
+                <tr>
+                  <td>Proteínas</td>
+                  <td>${product.nutrition.proteina}</td>
+                </tr>
+                <tr>
+                  <td>Grasas</td>
+                  <td>${product.nutrition.grasas}</td>
+                </tr>
+                <tr>
+                  <td>Carbohidratos</td>
+                  <td>${product.nutrition.carbohidratos}</td>
+                </tr>
+                <tr>
+                  <td>Fibra</td>
+                  <td>${product.nutrition.fibra}</td>
+                </tr>
+                <tr>
+                  <td>Sodio</td>
+                  <td>${product.nutrition.sodio}</td>
+                </tr>
+                ${product.nutrition.azucares ? `<tr><td>Azúcares</td><td>${product.nutrition.azucares}</td></tr>` : ''}
+                ${product.nutrition.cafeina ? `<tr><td>Cafeína</td><td>${product.nutrition.cafeina}</td></tr>` : ''}
+                ${product.nutrition.calcio ? `<tr><td>Calcio</td><td>${product.nutrition.calcio}</td></tr>` : ''}
+                ${product.nutrition.alcohol ? `<tr><td>Alcohol</td><td>${product.nutrition.alcohol}</td></tr>` : ''}
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('product-modal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function updateActiveFiltersDisplay() {
+      const container = document.getElementById('active-filters');
+      const list = document.getElementById('active-filters-list');
+      
+      const filters = [];
+      
+      if (state.activeCategory !== 'all') {
+        const categoryName = state.activeCategory.charAt(0).toUpperCase() + state.activeCategory.slice(1);
+        filters.push({ type: 'category', value: state.activeCategory, label: categoryName });
+      }
+      
+      if (state.activeAllergen !== 'none') {
+        const allergenLabels = {
+          'gluten': 'Gluten',
+          'lactosa': 'Lactosa',
+          'frutos-secos': 'Frutos Secos',
+          'cacahuete': 'Cacahuete',
+          'soja': 'Soja',
+          'huevo': 'Huevo',
+          'sulfitos': 'Sulfitos',
+          'sésamo': 'Sésamo'
+        };
+        filters.push({ type: 'allergen', value: state.activeAllergen, label: `Sin: ${allergenLabels[state.activeAllergen]}` });
+      }
+      
+      if (state.searchQuery) {
+        filters.push({ type: 'search', value: state.searchQuery, label: `"${state.searchQuery}"` });
+      }
+      
+      if (filters.length === 0) {
+        container.classList.add('hidden');
+        return;
+      }
+      
+      container.classList.remove('hidden');
+      list.innerHTML = filters.map(filter => `
+        <span class="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-bold">
+          ${filter.label}
+          <button onclick="removeFilter('${filter.type}', '${filter.value}')" class="hover:text-cyan-900">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            </svg>
+          </button>
+        </span>
+      `).join('');
+    }
+
+    function removeFilter(type, value) {
+      if (type === 'category') {
+        state.activeCategory = 'all';
+        document.querySelectorAll('.category-pill').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.category === 'all');
+        });
+      } else if (type === 'allergen') {
+        state.activeAllergen = 'none';
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.allergen === 'none');
+        });
+      } else if (type === 'search') {
+        state.searchQuery = '';
+        document.getElementById('search-input').value = '';
+      }
+      
+      updateActiveFiltersDisplay();
+      renderProducts();
+    }
+
+    function init() {
+      const searchInput = document.getElementById('search-input');
+      let searchTimeout;
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          state.searchQuery = e.target.value;
+          updateActiveFiltersDisplay();
+          renderProducts();
+        }, 300);
+      });
+
+      document.querySelectorAll('.category-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.category-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.activeCategory = btn.dataset.category;
+          updateActiveFiltersDisplay();
+          renderProducts();
+        });
+      });
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.activeAllergen = btn.dataset.allergen;
+          updateActiveFiltersDisplay();
+          renderProducts();
+        });
+      });
+
+      document.getElementById('sort-select').addEventListener('change', (e) => {
+        state.sortBy = e.target.value;
+        renderProducts();
+      });
+
+      document.getElementById('clear-filters').addEventListener('click', () => {
+        state.searchQuery = '';
+        state.activeCategory = 'all';
+        state.activeAllergen = 'none';
+        document.getElementById('search-input').value = '';
+        document.querySelectorAll('.category-pill').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.category === 'all');
+        });
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.allergen === 'none');
+        });
+        updateActiveFiltersDisplay();
+        renderProducts();
+      });
+
+      document.getElementById('product-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'product-modal') {
+          closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+      });
+
+      renderProducts();
+    }
+
+    async function onConfigChange(cfg) {
+      const title = cfg.section_title || defaultConfig.section_title;
+      const placeholder = cfg.search_placeholder || defaultConfig.search_placeholder;
+      
+      document.getElementById('section-title').textContent = title;
+      document.getElementById('search-input').placeholder = placeholder;
+    }
+
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ['section_title', cfg.section_title || defaultConfig.section_title],
+        ['search_placeholder', cfg.search_placeholder || defaultConfig.search_placeholder]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c9bf6a8a4a5a46e',t:'MTc3MDM5NDcwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
